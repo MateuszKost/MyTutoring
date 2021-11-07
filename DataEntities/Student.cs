@@ -1,4 +1,6 @@
-﻿namespace DataEntities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataEntities
 {
     public class Student
     {
@@ -10,6 +12,7 @@
             MaterialsGroupVisibilities = new HashSet<MaterialsGroupVisibility>();
         }
 
+        [ForeignKey("User")]
         public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

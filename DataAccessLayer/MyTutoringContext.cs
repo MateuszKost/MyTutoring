@@ -1,6 +1,7 @@
 ﻿using DataEntities;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace DataAccessLayer
 {
@@ -26,27 +27,15 @@ namespace DataAccessLayer
         public virtual DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MyTutoringDB;Integrated Security=True;");
-        //}
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=MyTutoringDB;Integrated Security=True;");
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional:true, reloadOnChange:true);
+                string connectionString = builder.Build().GetSection("ConnectionStrings").GetSection("MyTutoringDb").Value;
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
-
-        // tak to powinno wygladac ale z jakiegos powodu, appconfig nie ma nullRefernec wiec idk o co chodzi
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    if (!optionsBuilder.IsConfigured)
-        //    {
-        //        optionsBuilder.UseLazyLoadingProxies().UseSqlServer(ConfigurationManager.ConnectionStrings["MyTutoringDb"].ConnectionString);
-        //    }
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

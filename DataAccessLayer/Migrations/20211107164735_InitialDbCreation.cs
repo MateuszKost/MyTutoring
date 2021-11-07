@@ -75,15 +75,14 @@ namespace DataAccessLayer.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    PhoneNumber = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PhoneNumber = table.Column<int>(type: "int", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Student", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Student_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Student_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -96,15 +95,14 @@ namespace DataAccessLayer.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    PhoneNumber = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    PhoneNumber = table.Column<int>(type: "int", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Teacher", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Teacher_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Teacher_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -115,15 +113,14 @@ namespace DataAccessLayer.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Salt = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserIdentity", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_UserIdentity_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserIdentity_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -134,15 +131,14 @@ namespace DataAccessLayer.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserRefreshToken", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_UserRefreshToken_User_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserRefreshToken_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -210,6 +206,8 @@ namespace DataAccessLayer.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    Grade = table.Column<float>(type: "real", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TeacherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -354,11 +352,6 @@ namespace DataAccessLayer.Migrations
                 column: "MaterialsGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Student_UserId1",
-                table: "Student",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StudentTeacher_TeacherId",
                 table: "StudentTeacher",
                 column: "TeacherId");
@@ -369,24 +362,9 @@ namespace DataAccessLayer.Migrations
                 column: "HomeworkId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teacher_UserId1",
-                table: "Teacher",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_User_RoleId",
                 table: "User",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserIdentity_UserId1",
-                table: "UserIdentity",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRefreshToken_UserId1",
-                table: "UserRefreshToken",
-                column: "UserId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

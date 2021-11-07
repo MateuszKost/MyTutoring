@@ -1,4 +1,6 @@
-﻿namespace DataEntities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataEntities
 {
     public class Teacher
     {
@@ -9,6 +11,7 @@
             Homeworks = new HashSet<Homework>();
         }
 
+        [ForeignKey("User")]
         public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
