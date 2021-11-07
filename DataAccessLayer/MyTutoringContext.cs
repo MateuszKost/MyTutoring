@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration.Json;
 
 namespace DataAccessLayer
 {
-    public class MyTutoringContext : DbContext
+    public class MyTutoringContext : DbContext, IMyTutoringContext
     {
         public MyTutoringContext()
         { }
@@ -31,7 +31,7 @@ namespace DataAccessLayer
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional:true, reloadOnChange:true);
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 string connectionString = builder.Build().GetSection("ConnectionStrings").GetSection("MyTutoringDb").Value;
                 optionsBuilder.UseSqlServer(connectionString);
             }
@@ -109,8 +109,8 @@ namespace DataAccessLayer
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(80); 
-                
+                    .HasMaxLength(80);
+
                 entity.Property(e => e.Description)
                      .IsRequired()
                      .HasMaxLength(500);
@@ -272,8 +272,8 @@ namespace DataAccessLayer
 
                 entity.Property(e => e.Salt)
                     .IsRequired();
-            }); 
-            
+            });
+
             modelBuilder.Entity<UserRefreshToken>(entity =>
             {
                 entity.ToTable("UserRefreshToken");
