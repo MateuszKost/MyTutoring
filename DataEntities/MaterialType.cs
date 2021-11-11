@@ -1,4 +1,6 @@
-﻿namespace DataEntities
+﻿#nullable disable
+
+namespace DataEntities
 {
     public class MaterialType
     {
