@@ -1,7 +1,6 @@
 ﻿using DataEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 
 namespace DataAccessLayer
 {
@@ -33,7 +32,7 @@ namespace DataAccessLayer
             {
                 var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                 string connectionString = builder.Build().GetSection("ConnectionStrings").GetSection("MyTutoringDb").Value;
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
             }
         }
 
