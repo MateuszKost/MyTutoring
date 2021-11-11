@@ -1,9 +1,11 @@
 using DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Services.PasswordHasher;
+using MyTutoring.Server.Services.Authenticators;
+using MyTutoring.Server.Services.PasswordHasher;
+using MyTutoring.Server.Services.TokenGenerators;
+using MyTutoring.Server.Services.TokenValidators;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +29,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddSingleton<AccessTokenGenerator>();
+builder.Services.AddSingleton<RefreshTokenGenerator>();
+builder.Services.AddSingleton<RefreshTokenValidator>();
+builder.Services.AddSingleton<Authenticator>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -45,9 +51,10 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
 
             // Additionaly you can add there your localhost and signing key
-            ValidIssuer = "https://localhost:7120/",
-            ValidAudience = "https://localhost:7120/",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:SecretKey"]))            
+            ValidIssuer = builder.Configuration["JWTSettings:Issuer"],
+            ValidAudience = builder.Configuration["JWTSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:AccessSecretKey"])),
+            ClockSkew = TimeSpan.Zero
         };
     });
 
