@@ -1,5 +1,4 @@
 ﻿using DataEntities;
-using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
 namespace MyTutoring.Server.Services.TokenGenerators

@@ -9,7 +9,7 @@ namespace MyTutoring.Server.Controllers
     public class HomeController : Controller
     {
         [HttpGet("test")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public IActionResult Index()
         {
             string id = HttpContext.User.FindFirstValue("id");

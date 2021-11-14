@@ -50,7 +50,6 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
-            // Additionaly you can add there your localhost and signing key
             ValidIssuer = builder.Configuration["JWTSettings:Issuer"],
             ValidAudience = builder.Configuration["JWTSettings:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWTSettings:AccessSecretKey"])),

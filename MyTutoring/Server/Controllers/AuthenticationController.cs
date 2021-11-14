@@ -41,7 +41,7 @@ namespace MyTutoring.Server.Controllers
 
             if (user != null)
             {
-                UserIdentity? userIdentity = await _uow.UserIdentityRepo.SingleOrDefaultAsync(ui => ui.UserId == user.Id);
+                UserIdentity userIdentity = await _uow.UserIdentityRepo.SingleOrDefaultAsync(ui => ui.UserId == user.Id);
                 string salt = userIdentity.Salt;
                 string pepper = _configuration.GetValue<string>("PasswordSettings:Pepper");
                 string passwordHash = _passwordHasher.Hash(loginModel.Password + pepper, salt);
@@ -75,8 +75,6 @@ namespace MyTutoring.Server.Controllers
             {
                 return NotFound("Invalid refresh token");
             }
-            _uow.UserRefreshTokenRepo.Remove(userRefreshToken);
-            await _uow.CompleteAsync();
 
              User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Id == userRefreshToken.UserId);
             if(user == null)
@@ -84,7 +82,7 @@ namespace MyTutoring.Server.Controllers
                 return NotFound("User not found");
             }
 
-            AuthenticatedUserResponse response = await _authenticator.Authenticate(user, _uow);
+            AuthenticatedUserResponse response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
             return Ok(response); ;
         }
 
@@ -97,7 +95,7 @@ namespace MyTutoring.Server.Controllers
             {
                 return Unauthorized();
             }
-            UserRefreshToken? userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(urt => urt.UserId == userId);
+            UserRefreshToken userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(urt => urt.UserId == userId);
             _uow.UserRefreshTokenRepo.Remove(userRefreshToken);
             await _uow.CompleteAsync();
 
