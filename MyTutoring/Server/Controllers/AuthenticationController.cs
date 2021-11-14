@@ -1,11 +1,13 @@
 ﻿using DataAccessLayer;
 using DataEntities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using MyTutoring.Server.Services.Authenticators;
 using MyTutoring.Server.Services.PasswordHasher;
 using MyTutoring.Server.Services.TokenGenerators;
 using MyTutoring.Server.Services.TokenValidators;
+using System.Security.Claims;
 
 namespace MyTutoring.Server.Controllers
 {
@@ -84,6 +86,22 @@ namespace MyTutoring.Server.Controllers
 
             AuthenticatedUserResponse response = await _authenticator.Authenticate(user, _uow);
             return Ok(response); ;
+        }
+
+        [Authorize]
+        [HttpDelete("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            string rawUserId = HttpContext.User.FindFirstValue("id");
+            if(!Guid.TryParse(rawUserId, out Guid userId))
+            {
+                return Unauthorized();
+            }
+            UserRefreshToken? userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(urt => urt.UserId == userId);
+            _uow.UserRefreshTokenRepo.Remove(userRefreshToken);
+            await _uow.CompleteAsync();
+
+            return NoContent();
         }
     }
 }
