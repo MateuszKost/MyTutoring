@@ -7,7 +7,7 @@ namespace DataAccessLayer
         private readonly IMyTutoringContext _myTutoringContext;
 
         private IRepository<Activity>? _activityRepo;
-        public IRepository<Activity>? ActivityRepo
+        public IRepository<Activity> ActivityRepo
         {
             get
             {
@@ -20,7 +20,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<Homework>? _homeworkRepo;
-        public IRepository<Homework>? HomeworkRepo
+        public IRepository<Homework> HomeworkRepo
         {
             get
             {
@@ -33,7 +33,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<Material>? _materialRepo;
-        public IRepository<Material>? MaterialRepo
+        public IRepository<Material> MaterialRepo
         {
             get
             {
@@ -46,7 +46,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<MaterialsGroup>? _materialsGroupRepo;
-        public IRepository<MaterialsGroup>? MaterialsGroupRepo
+        public IRepository<MaterialsGroup> MaterialsGroupRepo
         {
             get
             {
@@ -59,7 +59,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<MaterialsGroupVisibility>? _materialsGroupVisibilityRepo;
-        public IRepository<MaterialsGroupVisibility>? MaterialsGroupVisibilityRepo
+        public IRepository<MaterialsGroupVisibility> MaterialsGroupVisibilityRepo
         {
             get
             {
@@ -72,7 +72,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<MaterialType>? _materialTypeRepo;
-        public IRepository<MaterialType>? MaterialTypeRepo
+        public IRepository<MaterialType> MaterialTypeRepo
         {
             get
             {
@@ -85,7 +85,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<Student>? _studentRepo;
-        public IRepository<Student>? StudentRepo
+        public IRepository<Student> StudentRepo
         {
             get
             {
@@ -98,7 +98,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<StudentTeacher>? _studentTeacherRepo;
-        public IRepository<StudentTeacher>? StudentTeacherRepo
+        public IRepository<StudentTeacher> StudentTeacherRepo
         {
             get
             {
@@ -111,7 +111,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<TaskSolution>? _taskSolutionRepo;
-        public IRepository<TaskSolution>? TaskSolutionRepo
+        public IRepository<TaskSolution> TaskSolutionRepo
         {
             get
             {
@@ -124,7 +124,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<Teacher>? _teacherRepo;
-        public IRepository<Teacher>? TeacherRepo
+        public IRepository<Teacher> TeacherRepo
         {
             get
             {
@@ -137,7 +137,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<User>? _userRepo;
-        public IRepository<User>? UserRepo
+        public IRepository<User> UserRepo
         {
             get
             {
@@ -150,7 +150,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<UserIdentity>? _userIdentityRepo;
-        public IRepository<UserIdentity>? UserIdentityRepo
+        public IRepository<UserIdentity> UserIdentityRepo
         {
             get
             {
@@ -163,7 +163,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<UserRefreshToken>? _userRefreshTokenRepo;
-        public IRepository<UserRefreshToken>? UserRefreshTokenRepo
+        public IRepository<UserRefreshToken> UserRefreshTokenRepo
         {
             get
             {
@@ -176,7 +176,7 @@ namespace DataAccessLayer
         }
 
         private IRepository<UserRole>? _userRoleRepo;
-        public IRepository<UserRole>? UserRoleRepo
+        public IRepository<UserRole> UserRoleRepo
         {
             get
             {

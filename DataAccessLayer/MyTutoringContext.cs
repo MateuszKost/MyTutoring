@@ -6,9 +6,13 @@ namespace DataAccessLayer
 {
     public class MyTutoringContext : DbContext, IMyTutoringContext
     {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public MyTutoringContext()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         { }
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public MyTutoringContext(DbContextOptions Options) : base(Options)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         { }
 
         public virtual DbSet<Activity> Activities { get; set; }
@@ -246,7 +250,7 @@ namespace DataAccessLayer
             {
                 entity.ToTable("User");
 
-                entity.Property(e => e.Login)
+                entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(80);
 
