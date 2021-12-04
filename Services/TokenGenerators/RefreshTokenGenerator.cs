@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace MyTutoring.Server.Services.TokenGenerators
+namespace MyTutoring.Services.TokenGenerators
 {
     public class RefreshTokenGenerator
     {

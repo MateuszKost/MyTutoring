@@ -50,5 +50,21 @@ namespace MyTutoring.Client.Authentication
                 _httpClient.DefaultRequestHeaders.Authorization = null;
             }
         }
+
+        public async Task Refresh()
+        {
+            var response = await _httpClient.GetAsync("Authentication/Refresh");
+            var result = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await _localStorage.RemoveItemAsync("authToken");
+                ((MyTutoringAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+            }
+
+            await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+        }
     }
 }

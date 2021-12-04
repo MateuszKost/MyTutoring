@@ -1,21 +1,23 @@
 ﻿using DataAccessLayer;
 using DataEntities;
+using Microsoft.Extensions.Configuration;
 using Models;
-using MyTutoring.Server.Services.TokenGenerators;
+using MyTutoring.Services.TokenGenerators;
+using Services;
 
 #nullable disable
 
-namespace MyTutoring.Server.Services.Authenticators
+namespace MyTutoring.MiddleLayer.Authenticators
 {
     public class Authenticator
     {
         private readonly AccessTokenGenerator _accessTokenGenerator;
         private readonly RefreshTokenGenerator _refreshTokenGenerator;
 
-        public Authenticator(AccessTokenGenerator accessTokenGenerator, RefreshTokenGenerator refreshTokenGenerator)
+        public Authenticator(IConfiguration configuration)
         {
-            _accessTokenGenerator = accessTokenGenerator;
-            _refreshTokenGenerator = refreshTokenGenerator;
+            _accessTokenGenerator = ServicesFactory.CreateAccessTokenGenerator(configuration);
+            _refreshTokenGenerator = ServicesFactory.CreateRefreshTokenGenerator(configuration);
         }
 
         public async Task<LoginResult> Authenticate(User user, IUnitOfWork unitOfWork)

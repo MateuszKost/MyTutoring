@@ -2,11 +2,12 @@
 using DataEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MiddleLayer;
 using Models;
-using MyTutoring.Server.Services.Authenticators;
-using MyTutoring.Server.Services.PasswordHasher;
-using MyTutoring.Server.Services.TokenGenerators;
-using MyTutoring.Server.Services.TokenValidators;
+using MyTutoring.MiddleLayer.Authenticators;
+using MyTutoring.Services.PasswordHasher;
+using MyTutoring.Services.TokenValidators;
+using Services;
 using System.Security.Claims;
 
 namespace MyTutoring.Server.Controllers
@@ -21,19 +22,18 @@ namespace MyTutoring.Server.Controllers
         private readonly Authenticator _authenticator;
         private readonly RefreshTokenValidator _refreshTokenValidator;
 
-        public AuthenticationController(IConfiguration configuration, IPasswordHasher passwordHasher, RefreshTokenValidator refreshTokenValidator, Authenticator authenticator)
+        public AuthenticationController(IConfiguration configuration)
         {
-            _uow = DataAccessLayerFactory.CreateUnitOfWork();
-            _passwordHasher = passwordHasher;
             _configuration = configuration;
-            _refreshTokenValidator = refreshTokenValidator;
-            _authenticator = authenticator;
+            _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            _passwordHasher = ServicesFactory.CreateBCryptPasswordHasher();
+            _authenticator = MiddleLayerFactory.CreateAuthenticator(_configuration);
+            _refreshTokenValidator = ServicesFactory.CreateRefreshTokenValidator(_configuration);
         }
 
         [HttpPost("Login")]
         public async Task<ActionResult<User>> Login([FromBody] LoginModel loginModel)
         {
-            //czy tu powinienem uzywac jsonSerializera? Przkoenamy sie przy debugowaniu czy to wgl przejdzie
             if (loginModel == null)
             {
                 return BadRequest("Invalid client request");
@@ -55,30 +55,27 @@ namespace MyTutoring.Server.Controllers
             }
 
             return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
-            //was there return UnAuthorized(); 
         }
 
-        [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
+        [HttpGet("refresh")]
+        [Authorize]
+        public async Task<IActionResult> Refresh()
         {
-            if(refreshRequest == null)
+            string userId = HttpContext.User.FindFirstValue("id");
+            UserRefreshToken? userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(rt => rt.UserId == Guid.Parse(userId));
+
+            if (userRefreshToken == null)
             {
                 return BadRequest("Invalid client request");
             }
 
-            bool isValidRefreshToken = _refreshTokenValidator.Validate(refreshRequest.RefreshToken);
+            bool isValidRefreshToken = _refreshTokenValidator.Validate(userRefreshToken.Token);
             if(!isValidRefreshToken)
             {
                 return BadRequest("Invalid refresh token");
             }
-
-            UserRefreshToken? userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(rt => rt.Token == refreshRequest.RefreshToken);
-            if(userRefreshToken == null)
-            {
-                return NotFound("Invalid refresh token");
-            }
-
-             User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Id == userRefreshToken.UserId);
+                
+            User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Id == userRefreshToken.UserId);
             if(user == null)
             {
                 return NotFound("User not found");

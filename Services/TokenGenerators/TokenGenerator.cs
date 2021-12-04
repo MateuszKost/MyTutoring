@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MyTutoring.Server.Services.TokenGenerators
+namespace MyTutoring.Services.TokenGenerators
 {
     internal class TokenGenerator
     {

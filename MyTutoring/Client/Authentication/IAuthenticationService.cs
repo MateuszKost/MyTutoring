@@ -6,5 +6,6 @@ namespace MyTutoring.Client.Authentication
     {
         Task<LoginResult> Login(LoginModel loginModel);
         Task Logout();
+        Task Refresh();
     }
 }
