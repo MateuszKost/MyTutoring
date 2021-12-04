@@ -30,9 +30,10 @@ namespace MyTutoring.Server.Controllers
             _authenticator = authenticator;
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<User>> Login([FromBody] LoginModel loginModel)
         {
+            //czy tu powinienem uzywac jsonSerializera? Przkoenamy sie przy debugowaniu czy to wgl przejdzie
             if (loginModel == null)
             {
                 return BadRequest("Invalid client request");
@@ -48,12 +49,13 @@ namespace MyTutoring.Server.Controllers
 
                 if (user.Password == passwordHash)
                 {
-                    AuthenticatedUserResponse response = await _authenticator.Authenticate(user, _uow);
+                    LoginResult response = await _authenticator.Authenticate(user, _uow);
                     return Ok(response);
                 }
             }
 
-            return Unauthorized();
+            return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+            //was there return UnAuthorized(); 
         }
 
         [HttpPost("refresh")]
@@ -82,7 +84,7 @@ namespace MyTutoring.Server.Controllers
                 return NotFound("User not found");
             }
 
-            AuthenticatedUserResponse response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
+            LoginResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
             return Ok(response); ;
         }
 
@@ -99,7 +101,7 @@ namespace MyTutoring.Server.Controllers
             _uow.UserRefreshTokenRepo.Remove(userRefreshToken);
             await _uow.CompleteAsync();
 
-            return NoContent();
+            return Ok();
         }
     }
 }
