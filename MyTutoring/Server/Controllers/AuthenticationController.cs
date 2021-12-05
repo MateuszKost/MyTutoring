@@ -21,6 +21,7 @@ namespace MyTutoring.Server.Controllers
         private readonly IConfiguration _configuration;
         private readonly Authenticator _authenticator;
         private readonly RefreshTokenValidator _refreshTokenValidator;
+        private readonly AccessTokenValidator _accessTokenValidator;
 
         public AuthenticationController(IConfiguration configuration)
         {
@@ -29,6 +30,7 @@ namespace MyTutoring.Server.Controllers
             _passwordHasher = ServicesFactory.CreateBCryptPasswordHasher();
             _authenticator = MiddleLayerFactory.CreateAuthenticator(_configuration);
             _refreshTokenValidator = ServicesFactory.CreateRefreshTokenValidator(_configuration);
+            _accessTokenValidator = ServicesFactory.CreateAccessTokenValidator(_configuration);
         }
 
         [HttpPost("Login")]
@@ -57,26 +59,36 @@ namespace MyTutoring.Server.Controllers
             return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
         }
 
-        [HttpGet("refresh")]
-        [Authorize]
-        public async Task<IActionResult> Refresh()
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
         {
-            string userId = HttpContext.User.FindFirstValue("id");
-            UserRefreshToken? userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(rt => rt.UserId == Guid.Parse(userId));
-
-            if (userRefreshToken == null)
+            if (refreshRequest == null)
             {
                 return BadRequest("Invalid client request");
             }
 
-            bool isValidRefreshToken = _refreshTokenValidator.Validate(userRefreshToken.Token);
-            if(!isValidRefreshToken)
+            bool isValidAccessToken = _accessTokenValidator.Validate(refreshRequest.AccessToken);
+            if (!isValidAccessToken)
             {
-                return BadRequest("Invalid refresh token");
+                return BadRequest("Invalid access token");
             }
-                
-            User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Id == userRefreshToken.UserId);
-            if(user == null)
+
+            string userId = HttpContext.User.FindFirstValue("id");
+
+            UserRefreshToken? userRefreshToken = await _uow.UserRefreshTokenRepo.SingleOrDefaultAsync(rt => rt.UserId == Guid.Parse(userId));
+            if (userRefreshToken == null)
+            {
+                return NotFound("Invalid refresh token");
+            }
+            bool isValidRefreshToken = _refreshTokenValidator.Validate(userRefreshToken.Token);
+
+            if (!isValidRefreshToken)
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+            if (user == null)
             {
                 return NotFound("User not found");
             }

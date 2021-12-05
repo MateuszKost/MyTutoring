@@ -8,7 +8,13 @@ namespace MyTutoring.Server.Controllers
     [Route("[controller]")]
     [ApiController]
     public class HomeController : Controller
-    {
+    { 
+        private IConfiguration _configuration;
+        public HomeController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         [HttpGet("test")]
         [Authorize(Roles = "admin")]
         public async Task<TestModel> Index()
@@ -16,7 +22,6 @@ namespace MyTutoring.Server.Controllers
             string id = HttpContext.User.FindFirstValue("id");
             string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
-
 
             return new TestModel() { Id = id, Name = email, Role = role };
         }

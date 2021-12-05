@@ -7,6 +7,6 @@ namespace Models
     public class RefreshRequest
     {
         [Required]
-        public string RefreshToken { get; set; }
+        public string AccessToken { get; set; }
     }
 }

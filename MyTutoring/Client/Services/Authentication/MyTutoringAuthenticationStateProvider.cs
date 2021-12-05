@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace MyTutoring.Client.Authentication
+namespace MyTutoring.Client.Services.Authentication
 {
     public class MyTutoringAuthenticationStateProvider : AuthenticationStateProvider
     {
