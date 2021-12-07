@@ -1,0 +1,52 @@
+﻿@page "/registerStudent"
+
+left(ShowErrors)
+    {
+    <div class="alert alert-danger" role="alert">
+    
+    <p>@Error</p>
+    }
+    </div>
+
+<div class="text-center">
+    <h1>Stwórz konto ucznia</h1>
+</div>
+
+<div class="card col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+    <div class="card-body">
+        <h5 class="card-title">Podaj dane ucznia</h5>
+        <EditForm Model="model" OnValidSubmit="OnSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="account">Typ konta</label>
+                <InputText Id="account" class="form-control" @bind-Value="model.Email" disabled="true" placeholder="Uczeń" />
+                <ValidationMessage For="@(() => model.AccountType)" />
+            </div>
+            <div class="form-group">
+                <label for="email">Adres email</label>
+                <InputText Id="email" class="form-control" @bind-Value="model.Email" placeholder="nazwa@domena.com" />
+                <ValidationMessage For="@(() => model.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="name">Imie</label>
+                <InputText Id="name" type="name" class="form-control" @bind-Value="model.FirstName" />
+                <ValidationMessage For="@(() => model.FirstName)" />
+            </div>
+            <div class="form-group">
+                <label for="surname">Nazwisko</label>
+                <InputText Id="surname" type="surname" class="form-control" @bind-Value="model.LastName" />
+                <ValidationMessage For="@(() => model.LastName)" />
+            </div>
+            <div class="form-group">
+                <label for="telephone">Numer telefonu</label>
+                <InputText Id="telephone" type="number" class="form-control" @bind-Value="model.PhoneNumber" placeholder="123456789" />
+                <ValidationMessage For="@(() => model.PhoneNumber)" />
+            </div>
+            <div class="text-center" style="margin-top: 5px">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </EditForm>
+    </div>
+</div>

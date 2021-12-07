@@ -1,7 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Models;
-using MyTutoring.Client.Services;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -24,6 +23,10 @@ namespace MyTutoring.Client.Services.Authentication
             _localStorage = localStorage;
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
+
+        public async Task<HttpResponseMessage> Register(RegisterModel model)
+            => await _httpClient
+                .PostAsync("Authentication/Logout", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
 
         public async Task<LoginResult> Login(LoginModel loginModel)
         {
