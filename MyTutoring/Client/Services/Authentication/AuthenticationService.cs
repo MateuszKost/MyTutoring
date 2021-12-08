@@ -26,7 +26,7 @@ namespace MyTutoring.Client.Services.Authentication
 
         public async Task<HttpResponseMessage> Register(RegisterModel model)
             => await _httpClient
-                .PostAsync("Authentication/Logout", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+                .PostAsync("Authentication/Register", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
 
         public async Task<LoginResult> Login(LoginModel loginModel)
         {

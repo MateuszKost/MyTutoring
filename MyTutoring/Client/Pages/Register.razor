@@ -1,7 +1,5 @@
 ﻿@page "/registerStudent"
 
-left(ShowErrors)
-    {
     <div class="alert alert-danger" role="alert">
     
     <p>@Error</p>
@@ -21,7 +19,7 @@ left(ShowErrors)
 
             <div class="form-group">
                 <label for="account">Typ konta</label>
-                <InputText Id="account" class="form-control" @bind-Value="model.Email" disabled="true" placeholder="Uczeń" />
+                <InputText Id="account" class="form-control" @bind-Value="model.AccountType" disabled="true" placeholder="Uczeń" />
                 <ValidationMessage For="@(() => model.AccountType)" />
             </div>
             <div class="form-group">

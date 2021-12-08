@@ -14,6 +14,7 @@ namespace MyTutoring.Client.Pages
 
         public async Task OnSubmit()
         {
+            model.AccountType = "student";
             var result = await AuthService.Register(model);
 
             if (result.IsSuccessStatusCode)

@@ -8,6 +8,7 @@ using MyTutoring.MiddleLayer.Authenticators;
 using MyTutoring.Services.PasswordHasher;
 using MyTutoring.Services.TokenValidators;
 using Services;
+using Services.PasswordGenerators;
 using System.Security.Claims;
 
 namespace MyTutoring.Server.Controllers
@@ -22,6 +23,7 @@ namespace MyTutoring.Server.Controllers
         private readonly Authenticator _authenticator;
         private readonly RefreshTokenValidator _refreshTokenValidator;
         private readonly AccessTokenValidator _accessTokenValidator;
+        private readonly PasswordGenerator _passwordGenerator;
 
         public AuthenticationController(IConfiguration configuration)
         {
@@ -31,6 +33,95 @@ namespace MyTutoring.Server.Controllers
             _authenticator = MiddleLayerFactory.CreateAuthenticator(_configuration);
             _refreshTokenValidator = ServicesFactory.CreateRefreshTokenValidator(_configuration);
             _accessTokenValidator = ServicesFactory.CreateAccessTokenValidator(_configuration);
+            _passwordGenerator = ServicesFactory.CreatePasswordGenerator();
+        }
+
+        [HttpPost("Register")]
+        public async Task<ActionResult<User>> Register([FromBody] RegisterModel registerModel)
+        {
+            User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
+            if (user != null)
+            {
+                return BadRequest("User with that email exists");
+            }
+            UserRole userRole = await _uow.UserRoleRepo.SingleOrDefaultAsync(ur => ur.Name == registerModel.AccountType);
+            if (userRole == null)
+            {
+                return BadRequest("Something gone wrong. Call user service!");
+            }
+
+            string password = _passwordGenerator.GeneratePassword();
+            string salt = _passwordHasher.GenerateSalt();
+
+            UserIdentity userIdentity = await _uow.UserIdentityRepo.SingleOrDefaultAsync(ui => ui.Salt == salt);
+            if (userIdentity != null)
+            {
+                while (userIdentity.Salt == salt)
+                {
+                    salt = _passwordHasher.GenerateSalt();
+                    userIdentity = await _uow.UserIdentityRepo.SingleOrDefaultAsync(ui => ui.Salt == salt);
+                    if(userIdentity == null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // send mail with password to user
+
+            string pepper = _configuration.GetValue<string>("PasswordSettings:Pepper");
+            string passwordHash = _passwordHasher.Hash(password + pepper, salt);
+
+            User newUser = new User()
+            {
+                Email = registerModel.Email,
+                Password = passwordHash,
+                RoleId = userRole.Id,
+                CreationDate = DateTime.Now
+            };
+
+            await _uow.UserRepo.AddAsync(newUser);
+            await _uow.CompleteAsync();
+
+            User createdUser = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
+
+            UserIdentity createdUserIdentity = new UserIdentity()
+            {
+                UserId = createdUser.Id,
+                Salt = salt
+            };
+
+            await _uow.UserIdentityRepo.AddAsync(createdUserIdentity);
+            await _uow.CompleteAsync();
+
+            if (registerModel.AccountType == "student")
+            {
+                Student student = new Student()
+                {
+                    UserId = createdUser.Id,
+                    FirstName = registerModel.FirstName,
+                    LastName = registerModel.LastName,
+                    PhoneNumber = Int32.Parse(registerModel.PhoneNumber)
+                };
+
+                await _uow.StudentRepo.AddAsync(student);
+                await _uow.CompleteAsync();                
+            }
+            else if (registerModel.AccountType == "teacher")
+            {
+                Teacher teacher = new Teacher()
+                {
+                    UserId = createdUser.Id,
+                    FirstName = registerModel.FirstName,
+                    LastName = registerModel.LastName,
+                    PhoneNumber = Int32.Parse(registerModel.PhoneNumber)
+                };
+
+                await _uow.TeacherRepo.AddAsync(teacher);
+                await _uow.CompleteAsync();
+            }
+
+            return Ok($"Poprawnie utworzono konto.");
         }
 
         [HttpPost("Login")]
@@ -94,7 +185,7 @@ namespace MyTutoring.Server.Controllers
             }
 
             LoginResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
-            return Ok(response); ;
+            return Ok(response); 
         }
 
         [Authorize]
@@ -102,7 +193,7 @@ namespace MyTutoring.Server.Controllers
         public async Task<IActionResult> Logout()
         {
             string rawUserId = HttpContext.User.FindFirstValue("id");
-            if(!Guid.TryParse(rawUserId, out Guid userId))
+            if (!Guid.TryParse(rawUserId, out Guid userId))
             {
                 return Unauthorized();
             }
