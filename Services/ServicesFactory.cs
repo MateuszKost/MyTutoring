@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using MyTutoring.Services.PasswordHasher;
 using MyTutoring.Services.TokenGenerators;
 using MyTutoring.Services.TokenValidators;
+using Services.EmailService;
 using Services.PasswordGenerators;
 
 namespace Services
@@ -19,6 +20,7 @@ namespace Services
             builder.RegisterType<RefreshTokenValidator>().SingleInstance();
             builder.RegisterType<AccessTokenValidator>().SingleInstance();
             builder.RegisterType<PasswordGenerator>();
+            builder.RegisterType<EmailSender>().As<IEmailSender>();
             Container = builder.Build();
         }
 
@@ -45,6 +47,10 @@ namespace Services
         public static PasswordGenerator CreatePasswordGenerator()
         {
             return Container.Resolve<PasswordGenerator>();
+        }
+        public static IEmailSender CreateEmailSender(EmailConfiguration configuration)
+        {
+            return Container.Resolve<IEmailSender>(new TypedParameter(typeof(EmailConfiguration), configuration));
         }
     }
 }

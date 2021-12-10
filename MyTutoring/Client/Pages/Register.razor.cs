@@ -21,6 +21,7 @@ namespace MyTutoring.Client.Pages
             {
                 ShowErrors = false;
                 Success = true;
+                NavigationManager.NavigateTo("/");
             }
             else
             {

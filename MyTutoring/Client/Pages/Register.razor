@@ -1,10 +1,12 @@
 ﻿@page "/registerStudent"
 
+
+  @if (ShowErrors)
+{
     <div class="alert alert-danger" role="alert">
-    
-    <p>@Error</p>
-    }
+        <p>@Error</p>
     </div>
+}
 
 <div class="text-center">
     <h1>Stwórz konto ucznia</h1>

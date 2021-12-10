@@ -8,6 +8,7 @@ using MyTutoring.MiddleLayer.Authenticators;
 using MyTutoring.Services.PasswordHasher;
 using MyTutoring.Services.TokenValidators;
 using Services;
+using Services.EmailService;
 using Services.PasswordGenerators;
 using System.Security.Claims;
 
@@ -20,12 +21,13 @@ namespace MyTutoring.Server.Controllers
         private readonly IUnitOfWork _uow;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
         private readonly Authenticator _authenticator;
         private readonly RefreshTokenValidator _refreshTokenValidator;
         private readonly AccessTokenValidator _accessTokenValidator;
         private readonly PasswordGenerator _passwordGenerator;
 
-        public AuthenticationController(IConfiguration configuration)
+        public AuthenticationController(IConfiguration configuration, EmailConfiguration emailConfiguration)
         {
             _configuration = configuration;
             _uow = DataAccessLayerFactory.CreateUnitOfWork();
@@ -34,6 +36,7 @@ namespace MyTutoring.Server.Controllers
             _refreshTokenValidator = ServicesFactory.CreateRefreshTokenValidator(_configuration);
             _accessTokenValidator = ServicesFactory.CreateAccessTokenValidator(_configuration);
             _passwordGenerator = ServicesFactory.CreatePasswordGenerator();
+            _emailSender = ServicesFactory.CreateEmailSender(emailConfiguration);
         }
 
         [HttpPost("Register")]
@@ -66,8 +69,6 @@ namespace MyTutoring.Server.Controllers
                     }
                 }
             }
-
-            // send mail with password to user
 
             string pepper = _configuration.GetValue<string>("PasswordSettings:Pepper");
             string passwordHash = _passwordHasher.Hash(password + pepper, salt);
@@ -120,6 +121,10 @@ namespace MyTutoring.Server.Controllers
                 await _uow.TeacherRepo.AddAsync(teacher);
                 await _uow.CompleteAsync();
             }
+            string content = $"Email: {registerModel.Email}\nHasło: {password}";
+
+            var message = new Message(new string[] { registerModel.Email }, "Dane do logowania", content);
+            await _emailSender.SendEmailAsync(message);
 
             return Ok($"Poprawnie utworzono konto.");
         }

@@ -6,6 +6,7 @@ using MyTutoring.MiddleLayer.Authenticators;
 using MyTutoring.Services.PasswordHasher;
 using MyTutoring.Services.TokenGenerators;
 using MyTutoring.Services.TokenValidators;
+using Services.EmailService;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,12 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
+
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+
+builder.Services.AddSingleton(emailConfig);
 
 builder.Services.AddAuthentication(options =>
 {

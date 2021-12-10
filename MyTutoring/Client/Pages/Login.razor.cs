@@ -16,6 +16,7 @@ namespace MyTutoring.Client.Pages
 
             if (result.Successful)
             {
+                ShowErrors = false;
                 NavigationManager.NavigateTo("/");
             }
             else
