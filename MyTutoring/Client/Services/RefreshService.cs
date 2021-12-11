@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Models;
 using MyTutoring.Client.Services.Authentication;
-using MyTutoring.Services.TokenValidators;
 using System.Text;
 using System.Text.Json;
 
@@ -41,7 +40,7 @@ namespace MyTutoring.Client.Services
                 _httpClient.DefaultRequestHeaders.Authorization = null;
             }
 
-            LoginResult result = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            RequestResult result = JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             await _localStorage.RemoveItemAsync("authToken");
             await _localStorage.SetItemAsync("authToken", result.AccessToken);

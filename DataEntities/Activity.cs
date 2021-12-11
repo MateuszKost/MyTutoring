@@ -10,9 +10,9 @@ namespace DataEntities
         public float EndTime { get; set; }
         public int DayOfWeek { get; set; }
         public Guid StudentId { get; set; }
-        public Guid TeacherId { get; set; }
+        public Guid TutorId { get; set; }
 
         public virtual Student Student { get; set; }
-        public virtual Teacher Teacher { get; set; }
+        public virtual Tutor Tutor { get; set; }
     }
 }

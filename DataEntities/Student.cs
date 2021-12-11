@@ -9,7 +9,7 @@ namespace DataEntities
         public Student()
         {
             Activities = new HashSet<Activity>();
-            StudentsTeachers = new HashSet<StudentTeacher>();
+            StudentsTutors = new HashSet<StudentTutor>();
             Homeworks = new HashSet<Homework>();
             MaterialsGroupVisibilities = new HashSet<MaterialsGroupVisibility>();
         }
@@ -22,7 +22,7 @@ namespace DataEntities
 
         public virtual User User { get; set; }
         public virtual ICollection<Activity> Activities { get; set; }
-        public virtual ICollection<StudentTeacher> StudentsTeachers { get; set; }
+        public virtual ICollection<StudentTutor> StudentsTutors { get; set; }
         public virtual ICollection<Homework> Homeworks { get; set; }
         public virtual ICollection<MaterialsGroupVisibility> MaterialsGroupVisibilities { get; set; }
     }

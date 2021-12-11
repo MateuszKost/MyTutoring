@@ -28,11 +28,11 @@ namespace MyTutoring.Client.Services.Authentication
             => await _httpClient
                 .PostAsync("Authentication/Register", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
 
-        public async Task<LoginResult> Login(LoginModel loginModel)
+        public async Task<RequestResult> Login(LoginModel loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
             var response = await _httpClient.PostAsync("Authentication/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));
-            var loginResult = JsonSerializer.Deserialize<LoginResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var loginResult = JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             if (!response.IsSuccessStatusCode)
             {

@@ -40,6 +40,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpPost("Register")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<User>> Register([FromBody] RegisterModel registerModel)
         {
             User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
@@ -108,9 +109,9 @@ namespace MyTutoring.Server.Controllers
                 await _uow.StudentRepo.AddAsync(student);
                 await _uow.CompleteAsync();                
             }
-            else if (registerModel.AccountType == "teacher")
+            else if (registerModel.AccountType == "tutor")
             {
-                Teacher teacher = new Teacher()
+                Tutor tutor = new Tutor()
                 {
                     UserId = createdUser.Id,
                     FirstName = registerModel.FirstName,
@@ -118,7 +119,7 @@ namespace MyTutoring.Server.Controllers
                     PhoneNumber = Int32.Parse(registerModel.PhoneNumber)
                 };
 
-                await _uow.TeacherRepo.AddAsync(teacher);
+                await _uow.TutorRepo.AddAsync(tutor);
                 await _uow.CompleteAsync();
             }
             string content = $"Email: {registerModel.Email}\nHasło: {password}";
@@ -147,15 +148,16 @@ namespace MyTutoring.Server.Controllers
 
                 if (user.Password == passwordHash)
                 {
-                    LoginResult response = await _authenticator.Authenticate(user, _uow);
+                    RequestResult response = await _authenticator.Authenticate(user, _uow);
                     return Ok(response);
                 }
             }
 
-            return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+            return BadRequest(new RequestResult { Successful = false, Error = "Username and password are invalid." });
         }
 
         [HttpPost("refresh")]
+        [Authorize(Roles = "admin, student, teacher")]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             if (refreshRequest == null)
@@ -189,11 +191,12 @@ namespace MyTutoring.Server.Controllers
                 return NotFound("User not found");
             }
 
-            LoginResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
+            RequestResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
             return Ok(response); 
         }
 
         [Authorize]
+        [Authorize(Roles = "admin, student, teacher")]
         [HttpDelete("logout")]
         public async Task<IActionResult> Logout()
         {

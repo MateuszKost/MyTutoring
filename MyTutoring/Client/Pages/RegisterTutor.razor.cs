@@ -2,7 +2,7 @@
 
 namespace MyTutoring.Client.Pages
 {
-    public partial class Register
+    public partial class RegisterTutor
     {
         public readonly RegisterModel model = new RegisterModel();
 
@@ -14,7 +14,7 @@ namespace MyTutoring.Client.Pages
 
         public async Task OnSubmit()
         {
-            model.AccountType = "student";
+            model.AccountType = "tutor";
             var result = await AuthService.Register(model);
 
             if (result.IsSuccessStatusCode)
