@@ -2,10 +2,11 @@ using DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MyTutoring.Server.Services.Authenticators;
-using MyTutoring.Server.Services.PasswordHasher;
-using MyTutoring.Server.Services.TokenGenerators;
-using MyTutoring.Server.Services.TokenValidators;
+using MyTutoring.MiddleLayer.Authenticators;
+using MyTutoring.Services.PasswordHasher;
+using MyTutoring.Services.TokenGenerators;
+using MyTutoring.Services.TokenValidators;
+using Services.EmailService;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +29,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
-builder.Services.AddSingleton<AccessTokenGenerator>();
-builder.Services.AddSingleton<RefreshTokenGenerator>();
-builder.Services.AddSingleton<RefreshTokenValidator>();
-builder.Services.AddSingleton<Authenticator>();
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+
+builder.Services.AddSingleton(emailConfig);
 
 builder.Services.AddAuthentication(options =>
 {

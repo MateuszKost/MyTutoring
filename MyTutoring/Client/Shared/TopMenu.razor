@@ -1,0 +1,201 @@
+﻿@using System.Security.Claims
+<AuthorizeView>
+    <Authorized>
+        @if (roleChecked)
+        {
+            LoadDataAsync();
+        }
+        <div class="topNavbar">
+            <nav>
+                <div class="nav-item px-1" style="float: left;">
+                    <NavLink class="nav-link" href="fetchdata" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true" style="font-size: 35px;"></span>
+                    </NavLink>
+                </div>
+                <div class="nav-item px-1" style="float: left">
+                    <NavLink class="nav-link" @onclick="ToggleNavMenu">
+                        <span class="oi oi-menu" aria-hidden="true" style="font-size: 35px;"></span>
+                    </NavLink>
+                </div>
+                <div class="nav-item px-1" style="float: right">
+                    <NavLink class="nav-link" @onclick="ToggleProfileMenu">
+                        <span class="oi oi-person" aria-hidden="true" style="font-size: 35px;"></span>
+                    </NavLink>
+                </div>
+            </nav>
+        </div>
+
+        <div class="@NavMenuCssClass" style="height: calc(100vh - 60px); left: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
+            <ul class="nav flex-column  my-auto mx-auto">
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="test" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
+                        <span class="sideoi oi oi-calculator" aria-hidden="true"></span> Zadania
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="counter" @onclick="()=>HideAllMenus()">
+                        <span class="sideoi oi oi-calendar" aria-hidden="true"></span> Moje zajęcia
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" @onclick="()=>ShowMaterialsMenu()">
+                        <span class="sideoi oi oi-list" aria-hidden="true"></span> Materiały pomocnicze
+                    </NavLink>
+                    <ul class="nav flex-column">
+                        @if (showMaterialsMenu == true)
+                        {
+                            <li class="nav-item px-3">
+                                <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
+                                    <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 1
+                                </NavLink>
+                            </li>
+                            <li class="nav-item px-3">
+                                <NavLink class="nav-link" href="material2" @onclick="()=>HideAllMenus()">
+                                    <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 2
+                                </NavLink>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                @if (roleString == "admin")
+                {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" @onclick="()=>ShowProfileMenu()">
+                            <span class="sideoi oi oi-people" aria-hidden="true"></span> Profile
+                        </NavLink>
+                        <ul class="nav flex-column">
+                            @if (showProfileMenu == true)
+                            {
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="dodajnauczyciela" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil nauczyciela
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="registerStudent" @onclick="()=>HideAllMenus()">
+                                        <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil ucznia
+                                    </NavLink>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="@ProfilMenuCssClass" style="width: 150px; right: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
+            <nav class="flex-column">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="edytuj" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
+                        <span class="sideoi oi oi-pencil " aria-hidden="true"></span> Edytuj
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Logout" @onclick="()=>HideAllMenus()">
+                        <span class="sideoi oi oi-account-logout" aria-hidden="true"></span> wyloguj
+                    </NavLink>
+                </div>
+            </nav>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        @if (!roleChecked)
+        {
+            SetUnchecked();
+        }
+        <div class="topNavbar">
+            <nav>
+                <div class="nav-item px-1" style="float: left;">
+                    <NavLink class="nav-link" href="fetchdata" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true" style="font-size: 35px;"></span>
+                    </NavLink>
+                </div>
+                <div class="nav-item px-1" style="float: right">
+                    <NavLink class="nav-link" @onclick="ToggleProfileMenu">
+                        <span class="oi oi-person" aria-hidden="true" style="font-size: 35px;"></span>
+                    </NavLink>
+                </div>
+            </nav>
+        </div>
+
+        <div class="@ProfilMenuCssClass" style="width: 150px; right: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
+            <nav class="flex-column">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Login" @onclick="()=>HideAllMenus()">
+                        <span class="sideoi oi oi-account-logout" aria-hidden="true"></span> zaloguj
+                    </NavLink>
+                </div>
+            </nav>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool collapseProfileNavMenu = true;
+    private bool showProfileMenu = false;
+    private bool showMaterialsMenu = false;
+    //private Claim role;
+    private string roleString;
+    private bool roleChecked = false;
+
+    public string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    public string? ProfilMenuCssClass => collapseProfileNavMenu ? "collapse" : null;
+
+    public void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public void ToggleProfileMenu()
+    {
+        collapseProfileNavMenu = !collapseProfileNavMenu;
+    }
+
+    private bool clicked = false;
+
+    public void ShowMaterialsMenu()
+    {
+        if (showMaterialsMenu == true)
+            showMaterialsMenu = false;
+        else
+            showMaterialsMenu = true;
+
+    }
+
+    public void ShowProfileMenu()
+    {
+        if (showProfileMenu == true)
+            showProfileMenu = false;
+        else
+            showProfileMenu = true;
+
+    }
+
+    public void HideAllMenus()
+    {
+        showProfileMenu = false;
+        showMaterialsMenu = false;
+        collapseNavMenu = true;
+        collapseProfileNavMenu = true;
+    }
+
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender) => await LoadDataAsync();
+
+    public async Task LoadDataAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+        var user = state.User;
+        var role = user.FindFirst(ClaimTypes.Role);
+        roleString = role.Value;
+
+        roleChecked = false;
+    }
+
+    private async Task SetUnchecked()
+    {
+        roleChecked = true;
+    }
+}

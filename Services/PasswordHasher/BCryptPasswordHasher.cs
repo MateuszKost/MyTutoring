@@ -1,4 +1,4 @@
-﻿namespace MyTutoring.Server.Services.PasswordHasher
+﻿namespace MyTutoring.Services.PasswordHasher
 {
     public class BCryptPasswordHasher : IPasswordHasher
     {
