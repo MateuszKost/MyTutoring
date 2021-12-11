@@ -1,6 +1,8 @@
 ﻿@page "/login"
 
-<h1>Login</h1>
+<div class="text-center">
+    <h1>Logowanie</h1>
+</div>
 
 @if (ShowErrors)
 {
@@ -11,18 +13,18 @@
 
 <div class="card col-lg-6 col-sm-8"  style="margin-right: auto; margin-left: auto">
     <div class="card-body">
-        <h5 class="card-title">Please enter your details</h5>
+        <h5 class="card-title">Podaj dane logowania</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
             <div class="form-group">
-                <label for="email">Email address</label>
+                <label for="email">Adres email</label>
                 <InputText Id="email" Class="form-control" @bind-Value="loginModel.Email" />
                 <ValidationMessage For="@(() => loginModel.Email)" />
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Hasło</label>
                 <InputText Id="password" type="password" Class="form-control" @bind-Value="loginModel.Password" />
                 <ValidationMessage For="@(() => loginModel.Password)" />
             </div>            
