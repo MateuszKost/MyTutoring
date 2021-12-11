@@ -25,7 +25,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpGet("Get")]
-        [Authorize(Roles = "admin, student, teacher")]
+        [Authorize(Roles = "student, teacher")]
         public async Task<ActionResult<EditProfileModel>> Login()
         {
             string userId = HttpContext.User.FindFirstValue("id");
@@ -53,6 +53,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpPost("Edit")]
+        [Authorize(Roles = "student, teacher")]
         public async Task<ActionResult<RequestResult>> Edit([FromBody] EditProfileModel editProfileModel)
         {
             string userId = HttpContext.User.FindFirstValue("id");

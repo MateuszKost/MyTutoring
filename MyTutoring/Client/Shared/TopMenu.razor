@@ -85,11 +85,14 @@
 
         <div class="@ProfilMenuCssClass" style="width: 150px; right: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
             <nav class="flex-column">
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="editProfile" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
+                @if (roleString == "student" || roleString == "tutor")
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="editProfile" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
                         <span class="sideoi oi oi-pencil " aria-hidden="true"></span> Edytuj
                     </NavLink>
                 </div>
+                }
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Logout" @onclick="()=>HideAllMenus()">
                         <span class="sideoi oi oi-account-logout" aria-hidden="true"></span> wyloguj
@@ -136,7 +139,6 @@
     private bool collapseProfileNavMenu = true;
     private bool showProfileMenu = false;
     private bool showMaterialsMenu = false;
-    //private Claim role;
     private string roleString;
     private bool roleChecked = false;
 

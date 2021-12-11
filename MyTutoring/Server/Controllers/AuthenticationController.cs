@@ -40,6 +40,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpPost("Register")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<User>> Register([FromBody] RegisterModel registerModel)
         {
             User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
@@ -156,6 +157,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpPost("refresh")]
+        [Authorize(Roles = "admin, student, teacher")]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             if (refreshRequest == null)
@@ -194,6 +196,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "admin, student, teacher")]
         [HttpDelete("logout")]
         public async Task<IActionResult> Logout()
         {
