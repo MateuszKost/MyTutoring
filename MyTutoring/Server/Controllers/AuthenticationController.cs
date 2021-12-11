@@ -108,9 +108,9 @@ namespace MyTutoring.Server.Controllers
                 await _uow.StudentRepo.AddAsync(student);
                 await _uow.CompleteAsync();                
             }
-            else if (registerModel.AccountType == "teacher")
+            else if (registerModel.AccountType == "tutor")
             {
-                Tutor teacher = new Tutor()
+                Tutor tutor = new Tutor()
                 {
                     UserId = createdUser.Id,
                     FirstName = registerModel.FirstName,
@@ -118,7 +118,7 @@ namespace MyTutoring.Server.Controllers
                     PhoneNumber = Int32.Parse(registerModel.PhoneNumber)
                 };
 
-                await _uow.TutorRepo.AddAsync(teacher);
+                await _uow.TutorRepo.AddAsync(tutor);
                 await _uow.CompleteAsync();
             }
             string content = $"Email: {registerModel.Email}\nHasło: {password}";
@@ -147,12 +147,12 @@ namespace MyTutoring.Server.Controllers
 
                 if (user.Password == passwordHash)
                 {
-                    LoginResult response = await _authenticator.Authenticate(user, _uow);
+                    RequestResult response = await _authenticator.Authenticate(user, _uow);
                     return Ok(response);
                 }
             }
 
-            return BadRequest(new LoginResult { Successful = false, Error = "Username and password are invalid." });
+            return BadRequest(new RequestResult { Successful = false, Error = "Username and password are invalid." });
         }
 
         [HttpPost("refresh")]
@@ -189,7 +189,7 @@ namespace MyTutoring.Server.Controllers
                 return NotFound("User not found");
             }
 
-            LoginResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
+            RequestResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
             return Ok(response); 
         }
 

@@ -20,7 +20,7 @@ namespace MyTutoring.MiddleLayer.Authenticators
             _refreshTokenGenerator = ServicesFactory.CreateRefreshTokenGenerator(configuration);
         }
 
-        public async Task<LoginResult> Authenticate(User user, IUnitOfWork unitOfWork)
+        public async Task<RequestResult> Authenticate(User user, IUnitOfWork unitOfWork)
         {
             UserRole userRole = await unitOfWork.UserRoleRepo.SingleOrDefaultAsync(role => role.Id == user.RoleId);
             string accessToken = _accessTokenGenerator.GenerateToken(user, userRole);
@@ -44,7 +44,7 @@ namespace MyTutoring.MiddleLayer.Authenticators
             }
             await unitOfWork.CompleteAsync();
 
-            return new LoginResult
+            return new RequestResult
             {
                 Successful = true,
                 AccessToken = accessToken,
@@ -52,12 +52,12 @@ namespace MyTutoring.MiddleLayer.Authenticators
             };
         }
 
-        public async Task<LoginResult> RefreshAccessToken(User user, string refreshToken, IUnitOfWork unitOfWork)
+        public async Task<RequestResult> RefreshAccessToken(User user, string refreshToken, IUnitOfWork unitOfWork)
         {
             UserRole userRole = await unitOfWork.UserRoleRepo.SingleOrDefaultAsync(role => role.Id == user.RoleId);
             string accessToken = _accessTokenGenerator.GenerateToken(user, userRole);
 
-            return new LoginResult
+            return new RequestResult
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken

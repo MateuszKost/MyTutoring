@@ -1,0 +1,68 @@
+﻿@page "/editProfile"
+
+@if (rendered)
+{
+    @if (ShowErrors)
+    {
+        <div class="alert alert-danger" role="alert">
+            <p>@Error</p>
+        </div>
+    }
+
+    <div class="text-center">
+        <h1>Edytuj profil</h1>
+    </div>
+
+    <div class="card col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            <h5 class="card-title">Zaktualizuj dane</h5>
+            <EditForm Model="model" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="name">Imie</label>
+                    <InputText Id="name" type="name" class="form-control" @bind-Value="model.FirstName" disabled="true" placeholder=@model.FirstName />
+                    <ValidationMessage For="@(() => model.FirstName)" />
+                </div>
+                <div class="form-group">
+                    <label for="surname">Nazwisko</label>
+                    <InputText Id="surname" type="surname" class="form-control" @bind-Value="model.LastName" disabled="true" placeholder=@model.LastName />
+                    <ValidationMessage For="@(() => model.LastName)" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Adres email</label>
+                    <InputText Id="email" class="form-control" @bind-Value="model.Email" disabled="true" placeholder=@model.Email />
+                    <ValidationMessage For="@(() => model.Email)" />
+                </div>
+                <div class="form-group">
+                    <label for="telephone">Numer telefonu</label>
+                    <InputText Id="telephone" type="number" class="form-control" @bind-Value="model.PhoneNumber" placeholder=@model.PhoneNumber />
+                    <ValidationMessage For="@(() => model.PhoneNumber)" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Aktualne hasło</label>
+                    <InputText @bind-Value="model.Password" type="password" class="form-control" />
+                    <ValidationMessage For="@(() => model.Password)" />
+                </div>
+                <div class="form-group">
+                    <label for="new password">Nowe hasło</label>
+                    <InputText @bind-Value="model.NewPassword" type="password" class="form-control" />
+                    <ValidationMessage For="@(() => model.NewPassword)" />
+                </div>
+                <div class="form-group">
+                    <label for="repeat password">Powtórz hasło</label>
+                    <InputText @bind-Value="model.RepeatPassword" type="password" class="form-control" />
+                    <ValidationMessage For="@(() => model.RepeatPassword)" />
+                </div>
+                <div class="text-center" style="margin-top: 5px">
+                    <button type="submit" class="btn btn-success">Zarejestruj</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <div>Loading screen...</div>
+}
