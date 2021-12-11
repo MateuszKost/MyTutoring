@@ -16,7 +16,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpGet("test")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, student, teacher")]
         public async Task<TestModel> Index()
         {
             string id = HttpContext.User.FindFirstValue("id");

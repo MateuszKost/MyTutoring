@@ -9,7 +9,7 @@
     </div>
 }
 
-<div class="card">
+<div class="card col-lg-6 col-sm-8"  style="margin-right: auto; margin-left: auto">
     <div class="card-body">
         <h5 class="card-title">Please enter your details</h5>
         <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
@@ -25,8 +25,10 @@
                 <label for="password">Password</label>
                 <InputText Id="password" type="password" Class="form-control" @bind-Value="loginModel.Password" />
                 <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>            
+            <div class="text-center" style="margin-top: 5px">
+                <button type="submit" class="btn btn-success">Zaloguj</button>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
         </EditForm>
     </div>
 </div>
