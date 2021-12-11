@@ -110,7 +110,7 @@ namespace MyTutoring.Server.Controllers
             }
             else if (registerModel.AccountType == "teacher")
             {
-                Teacher teacher = new Teacher()
+                Tutor teacher = new Tutor()
                 {
                     UserId = createdUser.Id,
                     FirstName = registerModel.FirstName,
@@ -118,7 +118,7 @@ namespace MyTutoring.Server.Controllers
                     PhoneNumber = Int32.Parse(registerModel.PhoneNumber)
                 };
 
-                await _uow.TeacherRepo.AddAsync(teacher);
+                await _uow.TutorRepo.AddAsync(teacher);
                 await _uow.CompleteAsync();
             }
             string content = $"Email: {registerModel.Email}\nHasło: {password}";

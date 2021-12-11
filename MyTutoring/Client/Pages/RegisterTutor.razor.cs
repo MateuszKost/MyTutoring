@@ -2,7 +2,7 @@
 
 namespace MyTutoring.Client.Pages
 {
-    public partial class RegisterTeacher
+    public partial class RegisterTutor
     {
         public readonly RegisterModel model = new RegisterModel();
 

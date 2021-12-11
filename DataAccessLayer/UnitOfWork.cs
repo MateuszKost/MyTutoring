@@ -97,16 +97,16 @@ namespace DataAccessLayer
             }
         }
 
-        private IRepository<StudentTeacher>? _studentTeacherRepo;
-        public IRepository<StudentTeacher> StudentTeacherRepo
+        private IRepository<StudentTutor>? _studentTutorRepo;
+        public IRepository<StudentTutor> StudentTutorRepo
         {
             get
             {
-                if (_studentTeacherRepo == null)
+                if (_studentTutorRepo == null)
                 {
-                    _studentTeacherRepo = new Repository<StudentTeacher>(_myTutoringContext.StudentsTeachers);
+                    _studentTutorRepo = new Repository<StudentTutor>(_myTutoringContext.StudentsTutors);
                 }
-                return _studentTeacherRepo;
+                return _studentTutorRepo;
             }
         }
 
@@ -123,16 +123,16 @@ namespace DataAccessLayer
             }
         }
 
-        private IRepository<Teacher>? _teacherRepo;
-        public IRepository<Teacher> TeacherRepo
+        private IRepository<Tutor>? _tutorRepo;
+        public IRepository<Tutor> TutorRepo
         {
             get
             {
-                if (_teacherRepo == null)
+                if (_tutorRepo == null)
                 {
-                    _teacherRepo = new Repository<Teacher>(_myTutoringContext.Teachers);
+                    _tutorRepo = new Repository<Tutor>(_myTutoringContext.Tutors);
                 }
-                return _teacherRepo;
+                return _tutorRepo;
             }
         }
 
