@@ -2,10 +2,9 @@ using DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MyTutoring.MiddleLayer.Authenticators;
-using MyTutoring.Services.PasswordHasher;
-using MyTutoring.Services.TokenGenerators;
-using MyTutoring.Services.TokenValidators;
+using MyTutoring.BlobStorageManager.Containers;
+using MyTutoring.BlobStorageManager.Context;
+using MyTutoring.BlobStorageManager.ServiceClient;
 using Services.EmailService;
 using System.Text;
 
@@ -57,6 +56,10 @@ builder.Services.AddAuthentication(options =>
             ClockSkew = TimeSpan.Zero
         };
     });
+
+builder.Services.AddSingleton(provider =>
+            new BlobStorageServiceClient(builder.Configuration["ConnectionStrings:AzureBlobStorage"]));
+builder.Services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();
 
 var app = builder.Build();
 
