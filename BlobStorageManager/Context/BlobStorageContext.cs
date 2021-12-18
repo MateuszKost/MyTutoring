@@ -38,24 +38,13 @@ namespace MyTutoring.BlobStorageManager.Context
             }
         }
 
-        public async Task<byte[]> GetAsync(TContainer containter, string name)
+        public async Task<Uri> GetAsync(TContainer containter, string name)
         {
             var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
 
-            // Get a reference to a blob
             var blobClient = containerClient.GetBlobClient(name);
-            var tmpp = blobClient.Uri;
-
-            //var blob = containerClient.Get .GetBlockBlobReference("image.png");
-            BlobDownloadInfo download = await blobClient.DownloadAsync();
-
-            MemoryStream downloadFileStream = new MemoryStream();
             
-            await download.Content.CopyToAsync(downloadFileStream);
-            
-            downloadFileStream.Close();
-            
-            return downloadFileStream.ToArray();
+            return blobClient.Uri;
         }
     }
 }

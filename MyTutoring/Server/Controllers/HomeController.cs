@@ -27,9 +27,7 @@ namespace MyTutoring.Server.Controllers
             string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
             string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
 
-            var imgBytes = await _storageContext.GetAsync(new FileContainer(), "GameDev_MKOKDL.pdf");
-
-            string tmp = Convert.ToBase64String(imgBytes);
+            var url = await _storageContext.GetAsync(new FileContainer(), "GameDev_MKOKDL.pdf");
 
             return new TestModel() { Id = id, Name = email, Role = role };
         }
