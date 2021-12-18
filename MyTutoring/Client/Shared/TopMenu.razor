@@ -1,6 +1,10 @@
 ﻿@using System.Security.Claims
 <AuthorizeView>
     <Authorized>
+        @if (!roleChecked)
+        {
+            SetChecked();
+        }
         @if (roleChecked)
         {
             LoadDataAsync();
@@ -44,6 +48,24 @@
                     <ul class="nav flex-column">
                         @if (showMaterialsMenu == true)
                         {
+                            @if (roleString == "admin" || roleString == "tutor")
+                            {
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-eye" aria-hidden="true"></span> Ustaw widoczność
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="createMaterialGroup" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-folder" aria-hidden="true"></span> Utwórz grupę materiałów
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-file" aria-hidden="true"></span> Utwórz materiał
+                                    </NavLink>
+                                </li>
+                            }
                             <li class="nav-item px-3">
                                 <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
                                     <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 1
@@ -57,7 +79,7 @@
                         }
                     </ul>
                 </li>
-                @if (roleString == "admin")
+                @if (roleString == "admin" || roleString == "tutor")
                 {
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" @onclick="()=>ShowProfileMenu()">
@@ -66,11 +88,14 @@
                         <ul class="nav flex-column">
                             @if (showProfileMenu == true)
                             {
-                                <li class="nav-item px-3">
-                                    <NavLink class="nav-link" href="registerTutor" @onclick="() => HideAllMenus()">
-                                        <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil korepetytora
-                                    </NavLink>
-                                </li>
+                                @if (roleString == "admin")
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="registerTutor" @onclick="() => HideAllMenus()">
+                                            <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil korepetytora
+                                        </NavLink>
+                                    </li>
+                                }
                                 <li class="nav-item px-3">
                                     <NavLink class="nav-link" href="registerStudent" @onclick="()=>HideAllMenus()">
                                         <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil ucznia
@@ -89,9 +114,9 @@
                 {
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="editProfile" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
-                        <span class="sideoi oi oi-pencil " aria-hidden="true"></span> Edytuj
-                    </NavLink>
-                </div>
+                            <span class="sideoi oi oi-pencil " aria-hidden="true"></span> Edytuj
+                        </NavLink>
+                    </div>
                 }
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Logout" @onclick="()=>HideAllMenus()">
@@ -102,10 +127,6 @@
         </div>
     </Authorized>
     <NotAuthorized>
-        @if (!roleChecked)
-        {
-            SetUnchecked();
-        }
         <div class="topNavbar">
             <nav>
                 <div class="nav-item px-1" style="float: left;">
@@ -139,8 +160,8 @@
     private bool collapseProfileNavMenu = true;
     private bool showProfileMenu = false;
     private bool showMaterialsMenu = false;
-    private string roleString;
-    private bool roleChecked = false;
+    private string roleString = "";
+    private bool roleChecked = false; 
 
     public string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     public string? ProfilMenuCssClass => collapseProfileNavMenu ? "collapse" : null;
@@ -184,7 +205,7 @@
     }
 
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender) => await LoadDataAsync();
+    //protected override void OnAfterRender(bool firstRender) => LoadDataAsync();
 
     public async Task LoadDataAsync()
     {
@@ -196,7 +217,7 @@
         roleChecked = false;
     }
 
-    private async Task SetUnchecked()
+    private async Task SetChecked()
     {
         roleChecked = true;
     }

@@ -40,7 +40,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpPost("Register")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, tutor")]
         public async Task<ActionResult<User>> Register([FromBody] RegisterModel registerModel)
         {
             User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
@@ -153,11 +153,11 @@ namespace MyTutoring.Server.Controllers
                 }
             }
 
-            return BadRequest(new RequestResult { Successful = false, Error = "Username and password are invalid." });
+            return BadRequest(new RequestResult { Successful = false, Message = "Username and password are invalid." });
         }
 
         [HttpPost("refresh")]
-        [Authorize(Roles = "admin, student, teacher")]
+        //[Authorize(Roles = "admin, student, teacher")]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             if (refreshRequest == null)

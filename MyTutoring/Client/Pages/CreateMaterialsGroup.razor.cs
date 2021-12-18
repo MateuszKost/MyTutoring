@@ -2,26 +2,17 @@
 
 namespace MyTutoring.Client.Pages
 {
-    public partial class EditProfile
+    public partial class CreateMaterialsGroup
     {
-        public EditProfileModel model { get; set; } = new EditProfileModel();
+        public readonly MaterialGroupViewModel model = new MaterialGroupViewModel();
 
         public bool ShowErrors { get; set; }
         public bool Success { get; set; } = false;
         string Error { get; set; }
-
-        private bool rendered = false;
-
-        protected override async Task OnInitializedAsync()
-        {
-            await LoadData();
-            rendered = true;
-            StateHasChanged();
-        }
-
+                
         public async Task OnSubmit()
-        {       
-            var result = await EditProfileService.EditProfile(model);
+        {
+            var result = await MaterialsGroupService.CreateMaterialsGroup(model);
 
             if (result.Successful)
             {
@@ -34,11 +25,6 @@ namespace MyTutoring.Client.Pages
                 Error = result.Message;
                 ShowErrors = true;
             }
-        }
-
-        private async Task LoadData()
-        {
-            model = await EditProfileService.GetEditProfileModel();
         }
     }
 }

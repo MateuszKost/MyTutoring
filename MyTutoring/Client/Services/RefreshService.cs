@@ -39,11 +39,13 @@ namespace MyTutoring.Client.Services
                 ((MyTutoringAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
                 _httpClient.DefaultRequestHeaders.Authorization = null;
             }
+            else
+            {
+                RequestResult result = JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            RequestResult result = JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            await _localStorage.RemoveItemAsync("authToken");
-            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+                await _localStorage.RemoveItemAsync("authToken");
+                await _localStorage.SetItemAsync("authToken", result.AccessToken);
+            }
         }
     }
 }

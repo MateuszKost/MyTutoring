@@ -25,7 +25,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpGet("Get")]
-        [Authorize(Roles = "student, teacher")]
+        [Authorize(Roles = "student, tutor")]
         public async Task<ActionResult<EditProfileModel>> Login()
         {
             string userId = HttpContext.User.FindFirstValue("id");
@@ -49,11 +49,11 @@ namespace MyTutoring.Server.Controllers
                 }
             }
 
-            return BadRequest(new RequestResult { Successful = false, Error = "User id is invalid" });
+            return BadRequest(new RequestResult { Successful = false, Message = "User id is invalid" });
         }
 
         [HttpPost("Edit")]
-        [Authorize(Roles = "student, teacher")]
+        [Authorize(Roles = "student, tutor")]
         public async Task<ActionResult<RequestResult>> Edit([FromBody] EditProfileModel editProfileModel)
         {
             string userId = HttpContext.User.FindFirstValue("id");
@@ -72,12 +72,12 @@ namespace MyTutoring.Server.Controllers
 
             if(user.Password != passwordHash)
             {
-                return BadRequest(new RequestResult { Successful = false, Error = "Aktualne haslo nie jest poprawne" });
+                return BadRequest(new RequestResult { Successful = false, Message = "Aktualne haslo nie jest poprawne" });
             }
 
             if (editProfileModel.NewPassword != editProfileModel.RepeatPassword)
             {
-                return BadRequest(new RequestResult { Successful = false, Error = "Nowe haslo i powtorzone, nie są takie same. Czy aby na pewno wprowadziłeś/aś dobre hasło?" });
+                return BadRequest(new RequestResult { Successful = false, Message = "Nowe haslo i powtorzone, nie są takie same. Czy aby na pewno wprowadziłeś/aś dobre hasło?" });
             }
 
             if (user != null)
@@ -102,7 +102,7 @@ namespace MyTutoring.Server.Controllers
                 return Ok();
             }
 
-            return BadRequest(new RequestResult { Successful = false, Error = "Błąd systemowy." });
+            return BadRequest(new RequestResult { Successful = false, Message = "Błąd systemowy." });
         }
     }
 }

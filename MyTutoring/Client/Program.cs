@@ -19,5 +19,6 @@ builder.Services.AddScoped<AuthenticationStateProvider, MyTutoringAuthentication
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<IEditProfileService, EditProfileService>();
+builder.Services.AddScoped<IMaterialsGroupService, MaterialsGroupService>();
 
 await builder.Build().RunAsync();

@@ -21,7 +21,7 @@ namespace MyTutoring.Client.Pages
             }
             else
             {
-                Error = result.Error;
+                Error = result.Message;
                 ShowErrors = true;
             }
         }
