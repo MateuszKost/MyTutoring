@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.MaterialGroup
 {
     public interface IMaterialsGroupService
     {

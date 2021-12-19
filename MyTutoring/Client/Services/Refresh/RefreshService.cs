@@ -7,7 +7,7 @@ using System.Text.Json;
 
 #nullable disable
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.Refresh
 {
     public class RefreshService : IRefreshService
     {

@@ -1,10 +1,11 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Models;
+using MyTutoring.Client.Services.Refresh;
 using System.Text;
 using System.Text.Json;
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.MaterialGroup
 {
     public class MaterialsGroupService : IMaterialsGroupService
     {

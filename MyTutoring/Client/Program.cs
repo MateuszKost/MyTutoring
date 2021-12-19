@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MyTutoring.Client;
 using MyTutoring.Client.Services;
 using MyTutoring.Client.Services.Authentication;
+using MyTutoring.Client.Services.EditProfile;
+using MyTutoring.Client.Services.MaterialGroup;
+using MyTutoring.Client.Services.Test;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

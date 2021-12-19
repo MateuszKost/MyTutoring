@@ -1,9 +1,10 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Models;
+using MyTutoring.Client.Services.Refresh;
 using System.Net.Http.Json;
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.Test
 {
     public class TestService : ITestService
     {

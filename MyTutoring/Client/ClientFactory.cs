@@ -2,6 +2,7 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MyTutoring.Client.Services;
+using MyTutoring.Client.Services.Refresh;
 
 namespace MyTutoring.Client
 {

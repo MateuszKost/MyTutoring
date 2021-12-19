@@ -1,11 +1,12 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Models;
+using MyTutoring.Client.Services.Refresh;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.EditProfile
 {
     public class EditProfileService : IEditProfileService
     {
