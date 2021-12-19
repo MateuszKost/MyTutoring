@@ -4,7 +4,7 @@ namespace MyTutoring.Client.Pages
 {
     public partial class CreateMaterialsGroup
     {
-        public readonly MaterialGroupViewModel model = new MaterialGroupViewModel();
+        public readonly MaterialGroupSingleViewModel model = new MaterialGroupSingleViewModel();
 
         public bool ShowErrors { get; set; }
         public bool Success { get; set; } = false;

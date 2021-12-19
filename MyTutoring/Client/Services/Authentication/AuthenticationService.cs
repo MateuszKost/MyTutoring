@@ -24,9 +24,14 @@ namespace MyTutoring.Client.Services.Authentication
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<HttpResponseMessage> Register(RegisterModel model)
-            => await _httpClient
-                .PostAsync("Authentication/Register", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+        public async Task<RequestResult> Register(RegisterModel model)
+        {
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Authentication/Register", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
 
         public async Task<RequestResult> Login(LoginModel loginModel)
         {

@@ -66,16 +66,17 @@
                                     </NavLink>
                                 </li>
                             }
-                            <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
-                                    <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 1
-                                </NavLink>
-                            </li>
-                            <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="material2" @onclick="()=>HideAllMenus()">
-                                    <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 2
-                                </NavLink>
-                            </li>
+                            @if (materialGroupViewModels != null)
+                            {
+                                @foreach (var group in materialGroupViewModels)
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" @onclick="@( () => Navigate(group.MaterialGroupId) )">
+                                            <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> @group.Name
+                                        </NavLink>
+                                    </li>
+                                }
+                            }
                         }
                     </ul>
                 </li>
@@ -161,7 +162,8 @@
     private bool showProfileMenu = false;
     private bool showMaterialsMenu = false;
     private string roleString = "";
-    private bool roleChecked = false; 
+    private bool roleChecked = false;
+    private IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels = null;
 
     public string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     public string? ProfilMenuCssClass => collapseProfileNavMenu ? "collapse" : null;
@@ -204,15 +206,15 @@
         collapseProfileNavMenu = true;
     }
 
-
-    //protected override void OnAfterRender(bool firstRender) => LoadDataAsync();
-
     public async Task LoadDataAsync()
     {
         var state = await AuthState.GetAuthenticationStateAsync();
         var user = state.User;
+        var userId = user.FindFirst("id");
         var role = user.FindFirst(ClaimTypes.Role);
         roleString = role.Value;
+
+        materialGroupViewModels = await MaterialsGroupService.GetMaterialGroupList(new UserInfoModel() { Id = userId.Value, Role = role.Value });
 
         roleChecked = false;
     }
@@ -220,5 +222,11 @@
     private async Task SetChecked()
     {
         roleChecked = true;
+    }
+
+    private void Navigate(int materialGroupId)
+    {
+        HideAllMenus();
+        NavigationManager.NavigateTo("materials/" + materialGroupId);
     }
 }

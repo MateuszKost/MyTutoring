@@ -3,7 +3,7 @@ using DataEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace MyTutoring.Server.Controllers
 {
@@ -20,48 +20,49 @@ namespace MyTutoring.Server.Controllers
             _uow = DataAccessLayerFactory.CreateUnitOfWork();
         }
 
-        //[HttpGet("Get")]
-        //[Authorize(Roles = "student, teacher")]
-        //public async Task<ActionResult<EditProfileModel>> Login()
-        //{
-        //    string userId = HttpContext.User.FindFirstValue("id");
-        //    string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
-
-        //    User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Id == Guid.Parse(userId));
-
-        //    if (user != null)
-        //    {
-        //        if (role == "tutor")
-        //        {
-        //            Tutor tutor = await _uow.TutorRepo.SingleOrDefaultAsync(t => t.UserId == Guid.Parse(userId));
-
-        //            return new EditProfileModel() { Email = user.Email, FirstName = tutor.FirstName, LastName = tutor.LastName, PhoneNumber = tutor.PhoneNumber.ToString() };
-        //        }
-        //        else if (role == "student")
-        //        {
-        //            Student student = await _uow.StudentRepo.SingleOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
-
-        //            return new EditProfileModel() { Email = user.Email, FirstName = student.FirstName, LastName = student.LastName, PhoneNumber = student.PhoneNumber.ToString() };
-        //        }
-        //    }
-
-        //    return BadRequest(new RequestResult { Successful = false, Error = "User id is invalid" });
-        //}
-
         [HttpPost("Create")]
         [Authorize(Roles = "admin, tutor")]
-        public async Task<ActionResult<RequestResult>> Create([FromBody] MaterialGroupViewModel materialGroupViewModel)
+        public async Task<ActionResult<RequestResult>> Create([FromBody] MaterialGroupSingleViewModel materialGroupViewModel)
         {
             if (materialGroupViewModel == null)
             {
-                return BadRequest("Nazwa grupy jest pusta");
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie podano nazwy dla grupy materiału"});
             }
-           
-            MaterialsGroup materialsGroup = new MaterialsGroup() { Name = materialGroupViewModel.Name};
+            var materialGroup = await _uow.MaterialsGroupRepo.SingleOrDefaultAsync(x => x.Name == materialGroupViewModel.Name);
+            if (materialGroup != null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Grupa o takiej nazwie już istnieje" });
+            }
+
+            MaterialsGroup materialsGroup = new MaterialsGroup() { Name = materialGroupViewModel.Name };
             await _uow.MaterialsGroupRepo.AddAsync(materialsGroup);
             await _uow.CompleteAsync();
 
             return Ok(new RequestResult { Successful = true, Message = "Utworzono grupe materiałów o nazwie " + materialGroupViewModel.Name });
+        }
+
+        [HttpPost("Getall")]
+        [Authorize(Roles = "admin, tutor, student")]
+        public async Task<ActionResult<MaterialsGroupViewModel>> GetAll([FromBody] UserInfoModel model)
+        {
+            IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels = new List<MaterialGroupSingleViewModel>();
+            if (model == null)
+            {
+                return new MaterialsGroupViewModel { MaterialGroupSingleViewModels = null};
+            }
+
+            if (model.Role == "admin" || model.Role == "tutor")
+            {
+                var list = await _uow.MaterialsGroupRepo.GetAllAsync();
+                materialGroupViewModels = list.Select(x => new MaterialGroupSingleViewModel { Name = x.Name, MaterialGroupId = x.Id });
+            }
+            else
+            {
+                var list = await _uow.MaterialsGroupVisibilityRepo.WhereAsync(x => x.StudentId == Guid.Parse(model.Id) && x.IsVisible == true);
+                materialGroupViewModels = list.Select(x => new MaterialGroupSingleViewModel { Name = x.MaterialsGroup.Name, MaterialGroupId = x.MaterialsGroup.Id });
+            }
+
+            return new MaterialsGroupViewModel { MaterialGroupSingleViewModels = materialGroupViewModels };
         }
     }
 }

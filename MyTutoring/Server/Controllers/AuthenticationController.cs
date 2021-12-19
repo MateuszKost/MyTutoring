@@ -41,17 +41,17 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("Register")]
         [Authorize(Roles = "admin, tutor")]
-        public async Task<ActionResult<User>> Register([FromBody] RegisterModel registerModel)
+        public async Task<ActionResult<RequestResult>> Register([FromBody] RegisterModel registerModel)
         {
             User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
             if (user != null)
             {
-                return BadRequest("User with that email exists");
+                return BadRequest(new RequestResult { Successful = false, Message = "Uzytkownik o takim mailu juz istnieje" });
             }
             UserRole userRole = await _uow.UserRoleRepo.SingleOrDefaultAsync(ur => ur.Name == registerModel.AccountType);
             if (userRole == null)
             {
-                return BadRequest("Something gone wrong. Call user service!");
+                return BadRequest(new RequestResult { Successful = false, Message = "Błąd po stronie serwera" });
             }
 
             string password = _passwordGenerator.GeneratePassword();
@@ -127,7 +127,7 @@ namespace MyTutoring.Server.Controllers
             var message = new Message(new string[] { registerModel.Email }, "Dane do logowania", content);
             await _emailSender.SendEmailAsync(message);
 
-            return Ok($"Poprawnie utworzono konto.");
+            return Ok(new RequestResult { Successful = true, Message = "Poprawnie utworzono użytkownika." });
         }
 
         [HttpPost("Login")]
@@ -192,7 +192,7 @@ namespace MyTutoring.Server.Controllers
             }
 
             RequestResult response = await _authenticator.RefreshAccessToken(user, userRefreshToken.Token, _uow);
-            return Ok(response); 
+            return Ok(response);
         }
 
         [Authorize]

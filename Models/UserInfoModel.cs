@@ -1,9 +1,8 @@
 ﻿namespace Models
 {
-    public class TestModel
+    public class UserInfoModel
     {
         public string Id { get; set; }
-        public string Name { get; set; }
         public string Role { get; set; }
     }
 }

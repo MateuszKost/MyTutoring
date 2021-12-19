@@ -19,7 +19,7 @@ namespace MyTutoring.Client.Services
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<RequestResult> CreateMaterialsGroup(MaterialGroupViewModel model)
+        public async Task<RequestResult> CreateMaterialsGroup(MaterialGroupSingleViewModel model)
         {
             await _refreshService.Refresh();
 
@@ -28,14 +28,24 @@ namespace MyTutoring.Client.Services
             return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<RequestResult> EditMaterialsGroup(MaterialGroupViewModel model)
+        public async Task<RequestResult> EditMaterialsGroup(MaterialGroupSingleViewModel model)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<RequestResult> DeleteMaterialsGroup(MaterialGroupViewModel model)
+        public async Task<RequestResult> DeleteMaterialsGroup(MaterialGroupSingleViewModel model)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<MaterialGroupSingleViewModel>> GetMaterialGroupList(UserInfoModel model)
+        {
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("MaterialsGroup/Getall", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+            MaterialsGroupViewModel materialsGroupViewModel = JsonSerializer.Deserialize<MaterialsGroupViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return materialsGroupViewModel.MaterialGroupSingleViewModels;
+        }            
     }
 }

@@ -18,10 +18,10 @@ namespace MyTutoring.Client.Services
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<TestModel> GetModel()
+        public async Task<UserInfoModel> GetModel()
         {
             await _refreshService.Refresh();
-            var result = await _httpClient.GetFromJsonAsync<TestModel>("home/test");
+            var result = await _httpClient.GetFromJsonAsync<UserInfoModel>("home/test");
             return result;
         }
     }
