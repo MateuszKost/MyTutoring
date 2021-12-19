@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using MyTutoring.BlobStorageManager.Containers;
 using MyTutoring.BlobStorageManager.Context;
 using MyTutoring.BlobStorageManager.ServiceClient;
+using MyTutoring.Server.Authenticators;
 using Services.EmailService;
 using System.Text;
 
@@ -33,7 +34,7 @@ var emailConfig = builder.Configuration
         .Get<EmailConfiguration>();
 
 builder.Services.AddSingleton(emailConfig);
-
+builder.Services.AddSingleton<Authenticator>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

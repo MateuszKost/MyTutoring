@@ -2,9 +2,8 @@
 using DataEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MiddleLayer;
 using Models;
-using MyTutoring.MiddleLayer.Authenticators;
+using MyTutoring.Server.Authenticators;
 using MyTutoring.Services.PasswordHasher;
 using MyTutoring.Services.TokenValidators;
 using Services;
@@ -27,12 +26,12 @@ namespace MyTutoring.Server.Controllers
         private readonly AccessTokenValidator _accessTokenValidator;
         private readonly PasswordGenerator _passwordGenerator;
 
-        public AuthenticationController(IConfiguration configuration, EmailConfiguration emailConfiguration)
+        public AuthenticationController(IConfiguration configuration, EmailConfiguration emailConfiguration, Authenticator authenticator)
         {
             _configuration = configuration;
             _uow = DataAccessLayerFactory.CreateUnitOfWork();
             _passwordHasher = ServicesFactory.CreateBCryptPasswordHasher();
-            _authenticator = MiddleLayerFactory.CreateAuthenticator(_configuration);
+            _authenticator = authenticator;
             _refreshTokenValidator = ServicesFactory.CreateRefreshTokenValidator(_configuration);
             _accessTokenValidator = ServicesFactory.CreateAccessTokenValidator(_configuration);
             _passwordGenerator = ServicesFactory.CreatePasswordGenerator();

@@ -25,7 +25,6 @@
     <ProjectReference Include="..\..\BlobStorageManager\BlobStorageManager.csproj" />
     <ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
     <ProjectReference Include="..\..\DataEntities\DataEntities.csproj" />
-    <ProjectReference Include="..\..\MiddleLayer\MiddleLayer.csproj" />
     <ProjectReference Include="..\..\Models\Models.csproj" />
     <ProjectReference Include="..\..\Services\Services.csproj" />
     <ProjectReference Include="..\Client\MyTutoring.Client.csproj" />
