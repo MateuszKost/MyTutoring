@@ -53,6 +53,14 @@ namespace MyTutoring.Client.Pages
 
         private async void UploadFiles()
         {
+            ShowErrors = false;
+
+            if(SelectedMaterialTypeId == 0 || SelectedMaterialGroupId == 0)
+            {
+                Error = "Wybierz typ i grupe materiału";
+                ShowErrors = true;
+            }
+
             model.MaterialTypeId = SelectedMaterialTypeId;
             model.MaterialGroupId = SelectedMaterialGroupId;
 
@@ -62,12 +70,16 @@ namespace MyTutoring.Client.Pages
             {
                 ShowErrors = false;
                 Success = true;
-                NavigationManager.NavigateTo("/");
+                StateHasChanged();
+
+                //Showing the information that file has been added doesnt work
+                //NavigationManager.NavigateTo("/");
             }
             else
             {
                 Error = result.Message;
                 ShowErrors = true;
+                StateHasChanged();
             }
         }
     }

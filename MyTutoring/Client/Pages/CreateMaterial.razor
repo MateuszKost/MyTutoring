@@ -1,10 +1,20 @@
 ﻿@page "/createMaterial"
+@attribute [Authorize]
 
-  @if (ShowErrors)
+@if (ShowErrors)
 {
     <div class="alert alert-danger" role="alert">
         <p>@Error</p>
     </div>
+}
+
+@if (Success)
+{
+    <div class="row justify-content-center mb-5">
+        <span class="text-success">Materiał został załadowany poprawnie!</span>
+    </div>
+    Task.Delay(1000);
+    NavigationManager.NavigateTo("/");
 }
 
 <div class="text-center">
@@ -49,6 +59,8 @@
                             <label for="selectType">Typ</label>
                             <select @onchange="OnSelectType" class="form-control" id="selectType">
 
+                                <option value="0"> </option>
+
                                 @if (materialTypeSingleViewModels != null)
                                 {
                                     foreach (var materialType in materialTypeSingleViewModels)
@@ -64,6 +76,8 @@
 
                             <label for="selectGroup">Grupa</label>
                             <select @onchange="OnSelectGroup" class="form-control" id="selectGroup">
+
+                                <option value="0"> </option>
 
                                 @if (materialGroupSingleViewModels != null)
                                 {

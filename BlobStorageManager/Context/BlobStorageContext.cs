@@ -18,7 +18,6 @@ namespace MyTutoring.BlobStorageManager.Context
         {
             var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
 
-            // Get a reference to a blob
             var blobClient = containerClient.GetBlobClient(name);
 
             using(var stream = new MemoryStream(file))
