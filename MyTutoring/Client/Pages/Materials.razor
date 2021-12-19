@@ -1,3 +1,16 @@
 ﻿@page "/materials/{MaterialGroupId:int}"
 @attribute [Authorize]
 
+@if (isLoading)
+{
+    @foreach (var material in materialViewModels)
+    {
+        <div class="text-center">
+            <h1>@material.Url</h1>
+        </div>
+    }
+}
+else
+{
+    <h1>Loading...</h1>
+}

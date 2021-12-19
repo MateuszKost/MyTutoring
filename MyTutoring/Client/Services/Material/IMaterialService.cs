@@ -8,6 +8,6 @@ namespace MyTutoring.Client.Services.Material
         Task<RequestResult> CreateMaterial(MaterialViewModel model);
         Task<RequestResult> DeleteMaterial(MaterialViewModel model);
         Task<RequestResult> EditMaterial(MaterialViewModel model);
-        Task<IEnumerable<MaterialViewModel>> GetMaterialViewModelList();
+        Task<IEnumerable<MaterialViewModel>> GetMaterialViewModelList(int materialGroupId);
     }
 }

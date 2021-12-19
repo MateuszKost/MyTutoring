@@ -48,7 +48,7 @@ namespace MyTutoring.Client.Pages
         { 
             IBrowserFile file = eventArgs.File;
             model.Data = await FileConverter.IBrowserFileImageToBase64Async(file);
-            model.Name = file.Name;
+            model.FileName = file.Name;
         }
 
         private async void UploadFiles()
@@ -72,7 +72,7 @@ namespace MyTutoring.Client.Pages
                 Success = true;
                 StateHasChanged();
 
-                //Showing the information that file has been added doesnt work
+
                 //NavigationManager.NavigateTo("/");
             }
             else

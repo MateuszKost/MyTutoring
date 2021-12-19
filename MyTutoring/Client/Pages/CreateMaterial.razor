@@ -47,8 +47,13 @@
                         <DataAnnotationsValidator />
                         <ValidationSummary />
                         <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
-                            <label for="email">Opis</label>
-                            <InputText Id="email" class="form-control" @bind-Value="model.Description" />
+                            <label for="name">Wyświetlana nazwa</label>
+                            <InputText Id="name" class="form-control" @bind-Value="model.Name" />
+                            <ValidationMessage For="@(() => model.Name)" />
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+                            <label for="description">Opis</label>
+                            <InputText Id="description" class="form-control" @bind-Value="model.Description" />
                             <ValidationMessage For="@(() => model.Description)" />
                         </div>
                     </EditForm>

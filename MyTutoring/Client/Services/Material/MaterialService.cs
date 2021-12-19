@@ -21,11 +21,15 @@ namespace MyTutoring.Client.Services.Material
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<IEnumerable<MaterialViewModel>> GetMaterialViewModelList()
+        public async Task<IEnumerable<MaterialViewModel>> GetMaterialViewModelList(int materialGroupId)
         {
             await _refreshService.Refresh();
+            var model = new MaterialGroupSingleViewModel { MaterialGroupId = materialGroupId, Name = "connect" };
 
-            throw new NotImplementedException();
+            var response = await _httpClient.PostAsync("Material/Getall", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+            MaterialsViewModel materialsGroupViewModel = JsonSerializer.Deserialize<MaterialsViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return materialsGroupViewModel.MaterialViewModels;
         }
 
         public async Task<RequestResult> CreateMaterial(MaterialViewModel model)

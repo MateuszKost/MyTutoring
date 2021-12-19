@@ -7,7 +7,6 @@ using Models.ViewModels;
 using MyTutoring.BlobStorageManager.Containers;
 using MyTutoring.BlobStorageManager.Context;
 using Services.FileConverter;
-using Services.HashGenerator;
 
 namespace MyTutoring.Server.Controllers
 {
@@ -33,7 +32,7 @@ namespace MyTutoring.Server.Controllers
                 return BadRequest(new RequestResult { Successful = false, Message = "Nie podano wszystkich danych" });
             }
 
-            Material baseMaterial = await _uow.MaterialRepo.SingleOrDefaultAsync(m => m.Name == materialModel.Name);
+            Material baseMaterial = await _uow.MaterialRepo.SingleOrDefaultAsync(m => m.Name == materialModel.FileName);
             if (baseMaterial != null)
             {
                 return BadRequest(new RequestResult { Successful = false, Message = "Plik o takiej nazwie już istnieje" });
@@ -42,37 +41,36 @@ namespace MyTutoring.Server.Controllers
             byte[] imageFile = FileConverter.Base64ToImage(materialModel.Data);
 
             Material material = new Material() { Name = materialModel.Name, Description = materialModel.Description, MaterialGroupId = materialModel.MaterialGroupId, MaterialTypeId = materialModel.MaterialTypeId,
-                FileSha1 = Hashgenerator.GetHash(imageFile)};
+                FileName = materialModel.FileName};
             await _uow.MaterialRepo.AddAsync(material);
             await _uow.CompleteAsync();
 
-            _storageContext.AddAsync(new FileContainer(), imageFile, material.FileSha1);
+            _storageContext.AddAsync(new FileContainer(), imageFile, material.FileName);
 
-            return Ok(new RequestResult { Successful = true, Message = "Materiał o nazwie " + materialModel.Name });
+            return Ok(new RequestResult { Successful = true, Message = "Materiał o nazwie " + materialModel.FileName });
         }
 
-        //[HttpPost("Getall")]
-        //[Authorize(Roles = "admin, tutor, student")]
-        //public async Task<ActionResult<MaterialsGroupViewModel>> GetAll([FromBody] UserInfo model)
-        //{
-        //    IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels = new List<MaterialGroupSingleViewModel>();
-        //    if (model == null)
-        //    {
-        //        return new MaterialsGroupViewModel { MaterialGroupSingleViewModels = null };
-        //    }
+        [HttpPost("Getall")]
+        [Authorize(Roles = "admin, tutor, student")]
+        public async Task<ActionResult<MaterialsViewModel>> GetAll([FromBody] MaterialGroupSingleViewModel materialGroupSingleViewModel)
+        {
+            ICollection<MaterialViewModel> materialViewModels = new List<MaterialViewModel>();
+            IEnumerable<Material> materials = new List<Material>();
 
-        //    if (model.Role == "admin" || model.Role == "tutor")
-        //    {
-        //        var list = await _uow.MaterialsGroupRepo.GetAllAsync();
-        //        materialGroupViewModels = list.Select(x => new MaterialGroupSingleViewModel { Name = x.Name, MaterialGroupId = x.Id });
-        //    }
-        //    else
-        //    {
-        //        var list = await _uow.MaterialsGroupVisibilityRepo.WhereAsync(x => x.StudentId == Guid.Parse(model.Id) && x.IsVisible == true);
-        //        materialGroupViewModels = list.Select(x => new MaterialGroupSingleViewModel { Name = x.MaterialsGroup.Name, MaterialGroupId = x.MaterialsGroup.Id });
-        //    }
+            if (materialGroupSingleViewModel == null)
+            {
+                return new MaterialsViewModel { MaterialViewModels = null };
+            }
 
-        //    return new MaterialsGroupViewModel { MaterialGroupSingleViewModels = materialGroupViewModels };
-        //}
+            materials = await _uow.MaterialRepo.WhereAsync(m => m.MaterialGroupId == materialGroupSingleViewModel.MaterialGroupId);
+
+            foreach(Material material in materials)
+            {
+                Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
+                materialViewModels.Add(new MaterialViewModel {Name = material. FileName = material.FileName, Description = material.Description, MaterialGroupId = material.MaterialGroupId, MaterialTypeId = material.MaterialTypeId, Url = url });
+            }
+
+            return new MaterialsViewModel { MaterialViewModels = materialViewModels };
+        }
     }
 }
