@@ -1,10 +1,10 @@
-﻿using Models;
+﻿using Models.ViewModels;
 
 namespace MyTutoring.Client.Pages
 {
     public partial class EditProfile
     {
-        public EditProfileModel model { get; set; } = new EditProfileModel();
+        public EditProfileViewModel model { get; set; } = new EditProfileViewModel();
 
         public bool ShowErrors { get; set; }
         public bool Success { get; set; } = false;

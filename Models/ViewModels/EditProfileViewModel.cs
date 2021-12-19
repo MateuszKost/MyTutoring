@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace Models.ViewModels
 {
-    public class EditProfileModel
+    public class EditProfileViewModel
     {
         public string FirstName { get; set; }
 

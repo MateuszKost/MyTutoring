@@ -1,10 +1,11 @@
 ﻿using Models;
+using Models.ViewModels;
 
 namespace MyTutoring.Client.Pages
 {
     public partial class Login
     {
-        private LoginModel loginModel = new LoginModel();
+        private LoginViewModel loginModel = new LoginViewModel();
         private bool ShowErrors;
         private string Error = "";
 

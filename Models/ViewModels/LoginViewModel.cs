@@ -2,9 +2,9 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace Models.ViewModels
 {
-    public class LoginModel
+    public class LoginViewModel
     {
         [Required]
         //[EmailAddress]

@@ -1,6 +1,6 @@
 ﻿using DataAccessLayer;
 using DataEntities;
-using Models;
+using Models.Models;
 using MyTutoring.Services.TokenGenerators;
 using Services;
 

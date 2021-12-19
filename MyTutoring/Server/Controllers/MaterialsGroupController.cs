@@ -2,8 +2,8 @@
 using DataEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models;
-using System.Collections.Generic;
+using Models.Models;
+using Models.ViewModels;
 
 namespace MyTutoring.Server.Controllers
 {

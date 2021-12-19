@@ -3,6 +3,8 @@ using DataEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Models.Models;
+using Models.ViewModels;
 using MyTutoring.Services.PasswordHasher;
 using Services;
 using System.Security.Claims;
@@ -26,7 +28,7 @@ namespace MyTutoring.Server.Controllers
 
         [HttpGet("Get")]
         [Authorize(Roles = "student, tutor")]
-        public async Task<ActionResult<EditProfileModel>> Login()
+        public async Task<ActionResult<EditProfileViewModel>> Login()
         {
             string userId = HttpContext.User.FindFirstValue("id");
             string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);
@@ -39,13 +41,13 @@ namespace MyTutoring.Server.Controllers
                 {
                     Tutor tutor = await _uow.TutorRepo.SingleOrDefaultAsync(t => t.UserId == Guid.Parse(userId));
 
-                    return new EditProfileModel() { Email = user.Email, FirstName = tutor.FirstName, LastName = tutor.LastName, PhoneNumber = tutor.PhoneNumber.ToString() };
+                    return new EditProfileViewModel() { Email = user.Email, FirstName = tutor.FirstName, LastName = tutor.LastName, PhoneNumber = tutor.PhoneNumber.ToString() };
                 }
                 else if(role == "student")
                 {
                     Student student = await _uow.StudentRepo.SingleOrDefaultAsync(s => s.UserId == Guid.Parse(userId));
 
-                    return new EditProfileModel() { Email = user.Email, FirstName = student.FirstName, LastName = student.LastName, PhoneNumber = student.PhoneNumber.ToString() };
+                    return new EditProfileViewModel() { Email = user.Email, FirstName = student.FirstName, LastName = student.LastName, PhoneNumber = student.PhoneNumber.ToString() };
                 }
             }
 
@@ -54,7 +56,7 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("Edit")]
         [Authorize(Roles = "student, tutor")]
-        public async Task<ActionResult<RequestResult>> Edit([FromBody] EditProfileModel editProfileModel)
+        public async Task<ActionResult<RequestResult>> Edit([FromBody] EditProfileViewModel editProfileModel)
         {
             string userId = HttpContext.User.FindFirstValue("id");
             string role = HttpContext.User.FindFirstValue(ClaimTypes.Role);

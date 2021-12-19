@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Models.Models;
+using Models.ViewModels;
 
 namespace MyTutoring.Client.Services.MaterialGroup
 {

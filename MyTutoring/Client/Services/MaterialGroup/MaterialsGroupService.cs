@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Models;
+using Models.Models;
+using Models.ViewModels;
 using MyTutoring.Client.Services.Refresh;
 using System.Text;
 using System.Text.Json;

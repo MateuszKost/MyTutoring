@@ -1,4 +1,4 @@
-﻿using Models;
+﻿using Models.Models;
 
 namespace MyTutoring.Client.Services.Test
 {

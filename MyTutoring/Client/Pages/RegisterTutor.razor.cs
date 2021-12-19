@@ -1,10 +1,10 @@
-﻿using Models;
+﻿using Models.ViewModels;
 
 namespace MyTutoring.Client.Pages
 {
     public partial class RegisterTutor
     {
-        public readonly RegisterModel model = new RegisterModel();
+        public readonly RegisterViewModel model = new RegisterViewModel();
 
         public bool ShowErrors { get; set; }
 

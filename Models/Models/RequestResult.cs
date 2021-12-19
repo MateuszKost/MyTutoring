@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-namespace Models
+namespace Models.Models
 {
     public class RequestResult
     {

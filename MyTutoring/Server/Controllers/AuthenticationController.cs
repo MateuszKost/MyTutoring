@@ -2,7 +2,8 @@
 using DataEntities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models;
+using Models.Models;
+using Models.ViewModels;
 using MyTutoring.Server.Authenticators;
 using MyTutoring.Services.PasswordHasher;
 using MyTutoring.Services.TokenValidators;
@@ -40,7 +41,7 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("Register")]
         [Authorize(Roles = "admin, tutor")]
-        public async Task<ActionResult<RequestResult>> Register([FromBody] RegisterModel registerModel)
+        public async Task<ActionResult<RequestResult>> Register([FromBody] RegisterViewModel registerModel)
         {
             User? user = await _uow.UserRepo.SingleOrDefaultAsync(u => u.Email == registerModel.Email);
             if (user != null)
@@ -130,7 +131,7 @@ namespace MyTutoring.Server.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<User>> Login([FromBody] LoginModel loginModel)
+        public async Task<ActionResult<User>> Login([FromBody] LoginViewModel loginModel)
         {
             if (loginModel == null)
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models;
+using Models.Models;
 using MyTutoring.BlobStorageManager.Containers;
 using MyTutoring.BlobStorageManager.Context;
 using System.Security.Claims;
