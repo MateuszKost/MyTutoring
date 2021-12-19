@@ -163,7 +163,7 @@
     private bool showMaterialsMenu = false;
     private string roleString = "";
     private bool roleChecked = false;
-    private IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels = null;
+    private IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels;
 
     public string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     public string? ProfilMenuCssClass => collapseProfileNavMenu ? "collapse" : null;
@@ -215,7 +215,6 @@
         roleString = role.Value;
 
         materialGroupViewModels = await MaterialsGroupService.GetMaterialGroupList(new UserInfo() { Id = userId.Value, Role = role.Value });
-
         roleChecked = false;
     }
 

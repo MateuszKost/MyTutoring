@@ -60,6 +60,11 @@ namespace MyTutoring.Client.Pages
                 Error = "Wybierz typ i grupe materiału";
                 ShowErrors = true;
             }
+            if(model.Description == null || model.Description.Length < 5)
+            {
+                Error = "Pole opisu jest wymagane";
+                ShowErrors = true;
+            }
 
             model.MaterialTypeId = SelectedMaterialTypeId;
             model.MaterialGroupId = SelectedMaterialGroupId;

@@ -10,7 +10,7 @@ namespace Services.FileConverter
         {
             var contentType = file.ContentType;
 
-            if (contentType.Contains("jpeg") || contentType.Contains("png"))
+            if (contentType.Contains("jpeg") || contentType.Contains("png") || contentType.Contains("pdf") || contentType.Contains("doc") || contentType.Contains("docx"))
             {
                 using Stream fileStream = file.OpenReadStream(MaxFileSize);
                 using MemoryStream ms = new();
@@ -21,7 +21,7 @@ namespace Services.FileConverter
                 return base64;
             }
             else
-                throw new BadImageFormatException();
+                throw new Exception();
         }
 
         public static string ImageBytesToBase64(byte[] file)

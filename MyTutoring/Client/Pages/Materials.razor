@@ -3,14 +3,79 @@
 
 @if (isLoading)
 {
-    @foreach (var material in materialViewModels)
+    if (materialViewModelsTypeNotes.Count > 0)
     {
-        <div class="text-center">
-            <h1>@material.Url</h1>
+        <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+            <div class="card-body">
+                <h5 class="card-title">Notatki</h5>
+                @foreach (var material in materialViewModelsTypeNotes)
+                {
+                    <div class="file">
+                        <div>
+                            <a class="aalink" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
+                            </a>
+                        </div>
+                        <div>
+                            <a>
+                                <span class="description">Opis: </span> @material.Description
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    if (materialViewModelsTypeHomework.Count > 0)
+    {
+        <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+            <div class="card-body">
+                <h5 class="card-title">Zadania</h5>
+                @foreach (var material in materialViewModelsTypeHomework)
+                {
+                    <div class="file">
+                        <div>
+                            <a class="aalink" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
+                            </a>
+                        </div>
+                        <div>
+                            <a>
+                                <span class="description">Opis: </span> @material.Description
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    if (materialViewModelsTypeTest.Count > 0)
+    {
+        <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+            <div class="card-body">
+                <h5 class="card-title">Sprawdziany</h5>
+                @foreach (var material in materialViewModelsTypeTest)
+                {
+                    <div class="file">
+                        <div>
+                            <a class="aalink" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
+                            </a>
+                        </div>
+                        <div>
+                            <a>
+                                <span class="description">Opis: </span> @material.Description
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     }
 }
 else
 {
-    <h1>Loading...</h1>
+    <h4>Loading...</h4>
 }

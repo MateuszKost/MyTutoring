@@ -38,14 +38,14 @@ namespace MyTutoring.Server.Controllers
                 return BadRequest(new RequestResult { Successful = false, Message = "Plik o takiej nazwie już istnieje" });
             }
 
-            byte[] imageFile = FileConverter.Base64ToImage(materialModel.Data);
+            byte[] file = FileConverter.Base64ToImage(materialModel.Data);
 
             Material material = new Material() { Name = materialModel.Name, Description = materialModel.Description, MaterialGroupId = materialModel.MaterialGroupId, MaterialTypeId = materialModel.MaterialTypeId,
                 FileName = materialModel.FileName};
             await _uow.MaterialRepo.AddAsync(material);
             await _uow.CompleteAsync();
 
-            _storageContext.AddAsync(new FileContainer(), imageFile, material.FileName);
+            _storageContext.AddAsync(new FileContainer(), file, material.FileName);
 
             return Ok(new RequestResult { Successful = true, Message = "Materiał o nazwie " + materialModel.FileName });
         }
@@ -67,7 +67,7 @@ namespace MyTutoring.Server.Controllers
             foreach(Material material in materials)
             {
                 Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
-                materialViewModels.Add(new MaterialViewModel {Name = material. FileName = material.FileName, Description = material.Description, MaterialGroupId = material.MaterialGroupId, MaterialTypeId = material.MaterialTypeId, Url = url });
+                materialViewModels.Add(new MaterialViewModel {Name = material.Name = material.FileName, Description = material.Description, MaterialGroupId = material.MaterialGroupId, MaterialTypeId = material.MaterialTypeId, Url = url });
             }
 
             return new MaterialsViewModel { MaterialViewModels = materialViewModels };

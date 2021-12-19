@@ -8,24 +8,31 @@ namespace MyTutoring.Client.Pages
         [Parameter]
         public int MaterialGroupId { get; set; }
 
-        private IEnumerable<MaterialViewModel> materialViewModels;
+        private IEnumerable<MaterialViewModel> baseMaterialViewModels;
+        private ICollection<MaterialViewModel> materialViewModelsTypeNotes = new List<MaterialViewModel>();
+        private ICollection<MaterialViewModel> materialViewModelsTypeHomework = new List<MaterialViewModel>();
+        private ICollection<MaterialViewModel> materialViewModelsTypeTest = new List<MaterialViewModel>();
         private bool isLoading = false;
 
         protected override async Task OnInitializedAsync()
         {
-            materialViewModels = await MaterialService.GetMaterialViewModelList(MaterialGroupId);
+            baseMaterialViewModels = await MaterialService.GetMaterialViewModelList(MaterialGroupId);
+            foreach (var materialViewModel in baseMaterialViewModels)
+            {
+                if(materialViewModel.MaterialTypeId == 1)
+                {
+                    materialViewModelsTypeNotes.Add(materialViewModel);
+                }
+                if (materialViewModel.MaterialTypeId == 2)
+                {
+                    materialViewModelsTypeHomework.Add(materialViewModel);
+                }
+                if (materialViewModel.MaterialTypeId == 3)
+                {
+                    materialViewModelsTypeTest.Add(materialViewModel);
+                }
+            }
             isLoading = true; 
-            //image = await ImageService.GetImage(ImageId);
-            //if (image.Tags?.Any() == true)
-            //    _tags = string.Join(" ", image.Tags.Select(x => "#" + x));
-            //if (DateTime.TryParse(image.Date, out var parsed))
-            //{
-            //    _date = parsed;
-            //}
-            //else
-            //{
-            //    _date = DateTime.Now;
-            //}
         }
     }
 }
