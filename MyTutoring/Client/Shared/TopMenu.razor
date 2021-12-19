@@ -61,7 +61,7 @@
                                     </NavLink>
                                 </li>
                                 <li class="nav-item px-3">
-                                    <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
+                                    <NavLink class="nav-link" href="createMaterial" @onclick="() => HideAllMenus()">
                                         <span class="sideoi oi oi-file" aria-hidden="true"></span> Utwórz materiał
                                     </NavLink>
                                 </li>
@@ -214,7 +214,7 @@
         var role = user.FindFirst(ClaimTypes.Role);
         roleString = role.Value;
 
-        materialGroupViewModels = await MaterialsGroupService.GetMaterialGroupList(new UserInfoModel() { Id = userId.Value, Role = role.Value });
+        materialGroupViewModels = await MaterialsGroupService.GetMaterialGroupList(new UserInfo() { Id = userId.Value, Role = role.Value });
 
         roleChecked = false;
     }

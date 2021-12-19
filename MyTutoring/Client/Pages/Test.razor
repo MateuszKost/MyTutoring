@@ -8,7 +8,7 @@
 <h1>Hello @test2.Id @test2.Role!</h1>
 
 @code {
-    private UserInfoModel test2 = new();
+    private UserInfo test2 = new();
 
    protected override async Task OnInitializedAsync() => test2 = await XD.GetModel();
 }

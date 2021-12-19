@@ -1,0 +1,74 @@
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Models.Models;
+using Models.ViewModels;
+using Services.FileConverter;
+using System.Security.Claims;
+
+namespace MyTutoring.Client.Pages
+{
+    public partial class CreateMaterial
+    {
+        public readonly MaterialViewModel model = new MaterialViewModel();
+        private IEnumerable<MaterialTypeSingleViewModel> materialTypeSingleViewModels;
+        private IEnumerable<MaterialGroupSingleViewModel> materialGroupSingleViewModels;
+        public bool ShowErrors { get; set; }
+        public bool Success { get; set; } = false;
+        string Error { get; set; }
+
+        public int SelectedMaterialTypeId { get; set; }
+        public int SelectedMaterialGroupId { get; set; }
+        public string Description { get; set; }
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            var state = await AuthState.GetAuthenticationStateAsync();
+            var user = state.User;
+            var userId = user.FindFirst("id");
+            var role = user.FindFirst(ClaimTypes.Role);
+
+            materialGroupSingleViewModels = await MaterialsGroupService.GetMaterialGroupList(new UserInfo() { Id = userId.Value, Role = role.Value });
+            materialTypeSingleViewModels = await MaterialsTypeService.GetMaterialTypeList();
+        }
+
+        private void OnSelectType(ChangeEventArgs e)
+        {
+            SelectedMaterialTypeId = int.Parse(e.Value.ToString());
+            Console.WriteLine(SelectedMaterialTypeId);
+        }
+
+        private void OnSelectGroup(ChangeEventArgs e)
+        {
+            SelectedMaterialGroupId = int.Parse(e.Value.ToString());
+            Console.WriteLine(SelectedMaterialGroupId);
+        }
+
+        private async void LoadFile(InputFileChangeEventArgs eventArgs)
+        { 
+            IBrowserFile file = eventArgs.File;
+            model.Data = await FileConverter.IBrowserFileImageToBase64Async(file);
+            model.Name = file.Name;
+        }
+
+        private async void UploadFiles()
+        {
+            model.MaterialTypeId = SelectedMaterialTypeId;
+            model.MaterialGroupId = SelectedMaterialGroupId;
+
+            var result = await MaterialService.CreateMaterial(model);
+
+            if (result.Successful)
+            {
+                ShowErrors = false;
+                Success = true;
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                Error = result.Message;
+                ShowErrors = true;
+            }
+        }
+    }
+}

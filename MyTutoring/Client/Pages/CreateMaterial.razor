@@ -1,0 +1,86 @@
+﻿@page "/createMaterial"
+
+  @if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<div class="text-center">
+    <h1>Utwórz materiał</h1>
+</div>
+
+<div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+    <div class="card-body">
+
+        <div class="text-center">
+            <div class="h1 rotate-15"><i class="bi bi-card-image"></i></div>
+            <h1 class="h4 text-gray-900 mb-4">
+                Wybierz plik, grupe i typ
+            </h1>
+        </div>
+
+        <div class="row">
+            <div class="col-6 mx-auto pb-5">
+                <div class="default-input-area d-flex justify-content-center">
+                    <InputFile OnChange="LoadFile" accept="application/pdf, application/msword, image/jpeg, image/png" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <form @onsubmit="UploadFiles" method="post">
+                <div class="row justify-content-center">
+
+                    <EditForm Model="model" OnValidSubmit="UploadFiles">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+                            <label for="email">Opis</label>
+                            <InputText Id="email" class="form-control" @bind-Value="model.Description" />
+                            <ValidationMessage For="@(() => model.Description)" />
+                        </div>
+                    </EditForm>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="MaterialType col-md-6 form-group text-center">
+
+                            <label for="selectType">Typ</label>
+                            <select @onchange="OnSelectType" class="form-control" id="selectType">
+
+                                @if (materialTypeSingleViewModels != null)
+                                {
+                                    foreach (var materialType in materialTypeSingleViewModels)
+                                    {
+                                        <option value="@materialType.MaterialTypeId">@materialType.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="col-md-6 form-group text-center">
+
+                            <label for="selectGroup">Grupa</label>
+                            <select @onchange="OnSelectGroup" class="form-control" id="selectGroup">
+
+                                @if (materialGroupSingleViewModels != null)
+                                {
+                                    foreach (var materialGroup in materialGroupSingleViewModels)
+                                    {
+                                        <option value="@materialGroup.MaterialGroupId">@materialGroup.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top: 5px">
+                        <button type="submit" class="btn btn-success">Prześlij</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

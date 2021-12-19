@@ -40,7 +40,7 @@ namespace MyTutoring.Client.Services.MaterialGroup
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<MaterialGroupSingleViewModel>> GetMaterialGroupList(UserInfoModel model)
+        public async Task<IEnumerable<MaterialGroupSingleViewModel>> GetMaterialGroupList(UserInfo model)
         {
             await _refreshService.Refresh();
 

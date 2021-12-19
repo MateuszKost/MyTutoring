@@ -11,12 +11,10 @@ namespace MyTutoring.Server.Controllers
     [ApiController]
     public class MaterialsGroupController : Controller
     {
-        private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _uow;
 
-        public MaterialsGroupController(IConfiguration configuration)
+        public MaterialsGroupController()
         {
-            _configuration = configuration;
             _uow = DataAccessLayerFactory.CreateUnitOfWork();
         }
 
@@ -43,7 +41,7 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("Getall")]
         [Authorize(Roles = "admin, tutor, student")]
-        public async Task<ActionResult<MaterialsGroupViewModel>> GetAll([FromBody] UserInfoModel model)
+        public async Task<ActionResult<MaterialsGroupViewModel>> GetAll([FromBody] UserInfo model)
         {
             IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels = new List<MaterialGroupSingleViewModel>();
             if (model == null)

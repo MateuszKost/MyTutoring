@@ -21,7 +21,7 @@ namespace MyTutoring.Server.Controllers
 
         [HttpGet("test")]
         [Authorize(Roles = "admin, student, tutor")]
-        public async Task<UserInfoModel> Index()
+        public async Task<UserInfo> Index()
         {
             string id = HttpContext.User.FindFirstValue("id");
             string email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
@@ -29,7 +29,7 @@ namespace MyTutoring.Server.Controllers
 
             var url = await _storageContext.GetAsync(new FileContainer(), "GameDev_MKOKDL.pdf");
 
-            return new UserInfoModel() { Id = id, Role = role };
+            return new UserInfo() { Id = id, Role = role };
         }
     }
 }

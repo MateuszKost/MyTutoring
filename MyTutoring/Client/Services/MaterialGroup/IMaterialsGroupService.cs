@@ -8,6 +8,6 @@ namespace MyTutoring.Client.Services.MaterialGroup
         Task<RequestResult> CreateMaterialsGroup(MaterialGroupSingleViewModel model);
         Task<RequestResult> DeleteMaterialsGroup(MaterialGroupSingleViewModel model);
         Task<RequestResult> EditMaterialsGroup(MaterialGroupSingleViewModel model);
-        Task<IEnumerable<MaterialGroupSingleViewModel>> GetMaterialGroupList(UserInfoModel userInfoModel);
+        Task<IEnumerable<MaterialGroupSingleViewModel>> GetMaterialGroupList(UserInfo userInfoModel);
     }
 }
