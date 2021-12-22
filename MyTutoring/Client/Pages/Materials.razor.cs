@@ -32,7 +32,8 @@ namespace MyTutoring.Client.Pages
                     materialViewModelsTypeTest.Add(materialViewModel);
                 }
             }
-            isLoading = true; 
+            isLoading = true;
+            StateHasChanged();
         }
     }
 }

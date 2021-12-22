@@ -1,0 +1,42 @@
+﻿@page "/visibility"
+
+@if (_loading)
+{
+    <div class="card col-lg-6 col-sm-8 col-xs-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            <h5 class="card-title">Wybierz ucznia do zedytowania widoczności materiałów</h5>
+            <EditForm Model="Finder" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <label for="userName">Imie i nazwisko</label>
+                    </div>
+                    <div>
+                        <InputText Id="userName" class="col-8" @bind-Value="Finder.UserName" />
+                        <button type="submit" class="col-2 text-center  btn btn-success" style="margin-left: 5px"><i class="oi oi-magnifying-glass"></i></button>
+                    </div>
+                </div>
+            </EditForm>
+            <div class="form-group">
+                <label class="col-4">Imie i nazwisko</label>
+                <label class="col-4" style="padding-left: 5px;">adres email</label>
+            </div>
+            @if (Students.Count() > 0)
+            {
+                @foreach (var student in Students)
+                {
+                    <div class="form-group">
+                        <label class="col-4">@student.StudentName</label>
+                        <label class="col-4" style="padding-left: 5px">@student.Email</label>
+                        <button type="submit" class="text-center col-sm-2 col-xl-2 btn btn-success" @onclick="@( () => Navigate(student.UserId) )"><i class="oi oi-eye"></i></button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h4>Loading...</h4>
+}
