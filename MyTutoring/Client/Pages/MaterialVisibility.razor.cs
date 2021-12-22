@@ -10,7 +10,7 @@ namespace MyTutoring.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Students = await MaterialVisibilityService.GetStudents(); // sciaganie z bazy 
+            Students = await MaterialVisibilityService.GetStudents();
             _loading = true;
         }
 
@@ -20,9 +20,9 @@ namespace MyTutoring.Client.Pages
             StateHasChanged();
         }
 
-        private void Navigate(int materialGroupId)
+        private void Navigate(int userId)
         {
-            NavigationManager.NavigateTo("changeVisibility/" + materialGroupId); // zmienic
+            NavigationManager.NavigateTo("changeVisibility/" + userId); 
         }
     }
 
