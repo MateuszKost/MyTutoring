@@ -1,5 +1,42 @@
-﻿@page "/changeVisibility/{UserId:int}"
+﻿@page "/changeVisibility/{UserId}"
 @attribute [Authorize]
 
+@if (_loading)
+{
+    <div class="card col-lg-4 col-sm-8 col-xs-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            <h5 class="card-title">Zmień widoczność materiałów</h5>
+            @if (Visibilities.Count() > 0)
+            {
+                <EditForm Model="Visibilities" OnValidSubmit="OnSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label class="col-6">Nazwa grupy materiałów</label>
+                        <label class="col-5 text-center">widoczność</label>
+                    </div>
+                    @foreach (var visibility in Visibilities)
+                    {
+                        <div class="form-group">
+                            <label class="col-6">@visibility.MaterialGroupName</label>
+                            <InputCheckbox Id="account" class="col-5" @bind-Value="visibility.IsVisible"/>
+                            <ValidationMessage For="@(() => visibility.IsVisible)" />
+                        </div>
+                    }
+                    <div class="text-center" style="margin-top: 5px">
+                    <button type="submit" class="btn btn-success">Zapisz</button>
+                </div>
+                </EditForm>
+            }
+            else
+            {
+                <h4>Brak danych</h4>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h4>Loading...</h4>
+}
 
-<h1> tutaj bedzie zmiana widocznosci dla uzytkownika z ID = @UserId</h1>

@@ -20,7 +20,7 @@ namespace MyTutoring.Client.Pages
             StateHasChanged();
         }
 
-        private void Navigate(int userId)
+        private void Navigate(string userId)
         {
             NavigationManager.NavigateTo("changeVisibility/" + userId); 
         }

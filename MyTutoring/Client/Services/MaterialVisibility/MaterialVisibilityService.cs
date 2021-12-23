@@ -1,8 +1,11 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Models.Models;
 using Models.ViewModels;
 using MyTutoring.Client.Services.Refresh;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 
 namespace MyTutoring.Client.Services.MaterialVisibility
 {
@@ -25,6 +28,27 @@ namespace MyTutoring.Client.Services.MaterialVisibility
             StudentViewModel studentViewModel = await _httpClient.GetFromJsonAsync<StudentViewModel>("MaterialVisibility/Getall");
 
             return studentViewModel.Students;
+        }
+
+        public async Task<ICollection<VisibilitySingleViewModel>> GetVisibilityList(string studentId)
+        {
+            await _refreshService.Refresh();
+            var model = new UserInfo { Id = studentId, Role = "" };
+
+            var response = await _httpClient.PostAsync("MaterialVisibility/Getvisibilitylist", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+            VisibilityViewModel visibilityViewModel = JsonSerializer.Deserialize<VisibilityViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return visibilityViewModel.Visibilities;
+        }
+
+        public async Task<RequestResult> SetVisibilityList(ICollection<VisibilitySingleViewModel> Visibilities)
+        {
+            await _refreshService.Refresh();
+            VisibilityViewModel visibilityViewModel = new VisibilityViewModel { Visibilities = Visibilities };
+
+            var response = await _httpClient.PostAsync("MaterialVisibility/Setvisibilitylist", new StringContent(JsonSerializer.Serialize(visibilityViewModel), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }
