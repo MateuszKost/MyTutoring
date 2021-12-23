@@ -1,6 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Models;
+using Models.Models;
+using Models.ViewModels;
+using MyTutoring.Client.Services.Refresh;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -24,11 +26,16 @@ namespace MyTutoring.Client.Services.Authentication
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<HttpResponseMessage> Register(RegisterModel model)
-            => await _httpClient
-                .PostAsync("Authentication/Register", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+        public async Task<RequestResult> Register(RegisterViewModel model)
+        {
+            await _refreshService.Refresh();
 
-        public async Task<RequestResult> Login(LoginModel loginModel)
+            var response = await _httpClient.PostAsync("Authentication/Register", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<RequestResult> Login(LoginViewModel loginModel)
         {
             var loginAsJson = JsonSerializer.Serialize(loginModel);
             var response = await _httpClient.PostAsync("Authentication/Login", new StringContent(loginAsJson, Encoding.UTF8, "application/json"));

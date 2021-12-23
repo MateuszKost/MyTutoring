@@ -2,9 +2,9 @@
 
 #nullable disable
 
-namespace Models
+namespace Models.ViewModels
 {
-    public class RegisterModel
+    public class RegisterViewModel
     {
 
         [Required(ErrorMessage = "Imię jest wymagane")]

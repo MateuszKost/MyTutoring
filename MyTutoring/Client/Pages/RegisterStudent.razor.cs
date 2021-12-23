@@ -1,23 +1,23 @@
-﻿using Models;
+﻿using Models.ViewModels;
 
 namespace MyTutoring.Client.Pages
 {
     public partial class RegisterStudent
     {
-        public readonly RegisterModel model = new RegisterModel();
+        public readonly RegisterViewModel model = new RegisterViewModel();
 
         public bool ShowErrors { get; set; }
 
         public bool Success { get; set; } = false;
 
-        HttpContent Error { get; set; }
+        string Error { get; set; }
 
         public async Task OnSubmit()
         {
             model.AccountType = "student";
             var result = await AuthService.Register(model);
 
-            if (result.IsSuccessStatusCode)
+            if (result.Successful)
             {
                 ShowErrors = false;
                 Success = true;
@@ -25,7 +25,7 @@ namespace MyTutoring.Client.Pages
             }
             else
             {
-                Error = result.Content;
+                Error = result.Message;
                 ShowErrors = true;
             }
         }

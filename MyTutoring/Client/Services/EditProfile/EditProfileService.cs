@@ -1,11 +1,13 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Models;
+using Models.Models;
+using Models.ViewModels;
+using MyTutoring.Client.Services.Refresh;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.EditProfile
 {
     public class EditProfileService : IEditProfileService
     {
@@ -20,14 +22,14 @@ namespace MyTutoring.Client.Services
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<EditProfileModel?> GetEditProfileModel()
+        public async Task<EditProfileViewModel?> GetEditProfileModel()
         {
             await _refreshService.Refresh();
 
-            return await _httpClient.GetFromJsonAsync<EditProfileModel>("EditProfile/Get");
+            return await _httpClient.GetFromJsonAsync<EditProfileViewModel>("EditProfile/Get");
         }
 
-        public async Task<RequestResult> EditProfile(EditProfileModel model)
+        public async Task<RequestResult> EditProfile(EditProfileViewModel model)
         {
             await _refreshService.Refresh();
 

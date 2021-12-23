@@ -7,7 +7,7 @@ namespace DataEntities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string FileSha1 { get; set; }
+        public string FileName { get; set; }
         public int MaterialTypeId { get; set; }
         public int MaterialGroupId { get; set; }
 

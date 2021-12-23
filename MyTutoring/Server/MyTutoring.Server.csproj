@@ -18,13 +18,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NETCore.MailKit" Version="2.0.3" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BlobStorageManager\BlobStorageManager.csproj" />
     <ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
     <ProjectReference Include="..\..\DataEntities\DataEntities.csproj" />
-    <ProjectReference Include="..\..\MiddleLayer\MiddleLayer.csproj" />
     <ProjectReference Include="..\..\Models\Models.csproj" />
     <ProjectReference Include="..\..\Services\Services.csproj" />
     <ProjectReference Include="..\Client\MyTutoring.Client.csproj" />

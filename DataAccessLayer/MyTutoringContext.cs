@@ -118,7 +118,7 @@ namespace DataAccessLayer
                      .IsRequired()
                      .HasMaxLength(500);
 
-                entity.Property(e => e.FileSha1)
+                entity.Property(e => e.FileName)
                     .IsRequired();
 
                 entity.HasOne(e => e.MaterialType)

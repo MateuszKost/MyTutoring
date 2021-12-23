@@ -1,6 +1,10 @@
 ﻿@using System.Security.Claims
 <AuthorizeView>
     <Authorized>
+        @if (!roleChecked)
+        {
+            SetChecked();
+        }
         @if (roleChecked)
         {
             LoadDataAsync();
@@ -44,20 +48,39 @@
                     <ul class="nav flex-column">
                         @if (showMaterialsMenu == true)
                         {
-                            <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="material1" @onclick="() => HideAllMenus()">
-                                    <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 1
-                                </NavLink>
-                            </li>
-                            <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="material2" @onclick="()=>HideAllMenus()">
-                                    <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> material 2
-                                </NavLink>
-                            </li>
+                            @if (roleString == "admin" || roleString == "tutor")
+                            {
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="visibility" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-eye" aria-hidden="true"></span> Ustaw widoczność
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="createMaterialGroup" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-folder" aria-hidden="true"></span> Utwórz grupę materiałów
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="createMaterial" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-file" aria-hidden="true"></span> Utwórz materiał
+                                    </NavLink>
+                                </li>
+                            }
+                            @if (materialGroupViewModels != null)
+                            {
+                                @foreach (var group in materialGroupViewModels)
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" @onclick="@( () => Navigate(group.MaterialGroupId) )">
+                                            <span class="sideoi oi oi-arrow-right" aria-hidden="true"></span> @group.Name
+                                        </NavLink>
+                                    </li>
+                                }
+                            }
                         }
                     </ul>
                 </li>
-                @if (roleString == "admin")
+                @if (roleString == "admin" || roleString == "tutor")
                 {
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" @onclick="()=>ShowProfileMenu()">
@@ -66,11 +89,14 @@
                         <ul class="nav flex-column">
                             @if (showProfileMenu == true)
                             {
-                                <li class="nav-item px-3">
-                                    <NavLink class="nav-link" href="registerTutor" @onclick="() => HideAllMenus()">
-                                        <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil korepetytora
-                                    </NavLink>
-                                </li>
+                                @if (roleString == "admin")
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="registerTutor" @onclick="() => HideAllMenus()">
+                                            <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil korepetytora
+                                        </NavLink>
+                                    </li>
+                                }
                                 <li class="nav-item px-3">
                                     <NavLink class="nav-link" href="registerStudent" @onclick="()=>HideAllMenus()">
                                         <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil ucznia
@@ -89,9 +115,9 @@
                 {
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="editProfile" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
-                        <span class="sideoi oi oi-pencil " aria-hidden="true"></span> Edytuj
-                    </NavLink>
-                </div>
+                            <span class="sideoi oi oi-pencil " aria-hidden="true"></span> Edytuj
+                        </NavLink>
+                    </div>
                 }
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Logout" @onclick="()=>HideAllMenus()">
@@ -102,10 +128,6 @@
         </div>
     </Authorized>
     <NotAuthorized>
-        @if (!roleChecked)
-        {
-            SetUnchecked();
-        }
         <div class="topNavbar">
             <nav>
                 <div class="nav-item px-1" style="float: left;">
@@ -139,8 +161,9 @@
     private bool collapseProfileNavMenu = true;
     private bool showProfileMenu = false;
     private bool showMaterialsMenu = false;
-    private string roleString;
+    private string roleString = "";
     private bool roleChecked = false;
+    private IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels;
 
     public string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
     public string? ProfilMenuCssClass => collapseProfileNavMenu ? "collapse" : null;
@@ -183,21 +206,26 @@
         collapseProfileNavMenu = true;
     }
 
-
-    //protected override async Task OnAfterRenderAsync(bool firstRender) => await LoadDataAsync();
-
     public async Task LoadDataAsync()
     {
         var state = await AuthState.GetAuthenticationStateAsync();
         var user = state.User;
+        var userId = user.FindFirst("id");
         var role = user.FindFirst(ClaimTypes.Role);
         roleString = role.Value;
 
+        materialGroupViewModels = await MaterialsGroupService.GetMaterialGroupList(new UserInfo() { Id = userId.Value, Role = role.Value });
         roleChecked = false;
     }
 
-    private async Task SetUnchecked()
+    private async Task SetChecked()
     {
         roleChecked = true;
+    }
+
+    private void Navigate(int materialGroupId)
+    {
+        HideAllMenus();
+        NavigationManager.NavigateTo("materials/" + materialGroupId);
     }
 }

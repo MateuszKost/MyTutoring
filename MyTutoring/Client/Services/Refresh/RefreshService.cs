@@ -1,13 +1,13 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Models;
+using Models.Models;
 using MyTutoring.Client.Services.Authentication;
 using System.Text;
 using System.Text.Json;
 
 #nullable disable
 
-namespace MyTutoring.Client.Services
+namespace MyTutoring.Client.Services.Refresh
 {
     public class RefreshService : IRefreshService
     {
@@ -39,11 +39,13 @@ namespace MyTutoring.Client.Services
                 ((MyTutoringAuthenticationStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
                 _httpClient.DefaultRequestHeaders.Authorization = null;
             }
+            else
+            {
+                RequestResult result = JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            RequestResult result = JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            await _localStorage.RemoveItemAsync("authToken");
-            await _localStorage.SetItemAsync("authToken", result.AccessToken);
+                await _localStorage.RemoveItemAsync("authToken");
+                await _localStorage.SetItemAsync("authToken", result.AccessToken);
+            }
         }
     }
 }

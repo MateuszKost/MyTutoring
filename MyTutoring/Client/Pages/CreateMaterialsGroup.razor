@@ -1,0 +1,31 @@
+﻿@page "/createMaterialGroup"
+@attribute [Authorize]
+
+  @if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<div class="text-center">
+    <h1>Stwórz grupę materiałów</h1>
+</div>
+
+<div class="card col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+    <div class="card-body">
+        <EditForm Model="model" OnValidSubmit="OnSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="account">Nazwa grupy</label>
+                <InputText Id="account" class="form-control" @bind-Value="model.Name" placeholder="Nazwa grupy" />
+                <ValidationMessage For="@(() => model.Name)" />
+            </div>
+            <div class="text-center" style="margin-top: 5px">
+                <button type="submit" class="btn btn-success">Utwórz grupę</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
