@@ -9,7 +9,7 @@ namespace MyTutoring.Client.Pages
 {
     public partial class CreateMaterial
     {
-        public readonly MaterialViewModel model = new MaterialViewModel();
+        public MaterialViewModel model = new MaterialViewModel();
         private IEnumerable<MaterialTypeSingleViewModel> materialTypeSingleViewModels;
         private IEnumerable<MaterialGroupSingleViewModel> materialGroupSingleViewModels;
         public bool ShowErrors { get; set; }
@@ -45,7 +45,7 @@ namespace MyTutoring.Client.Pages
         }
 
         private async void LoadFile(InputFileChangeEventArgs eventArgs)
-        { 
+        {
             IBrowserFile file = eventArgs.File;
             model.Data = await FileConverter.IBrowserFileImageToBase64Async(file);
             model.FileName = file.Name;
@@ -55,12 +55,12 @@ namespace MyTutoring.Client.Pages
         {
             ShowErrors = false;
 
-            if(SelectedMaterialTypeId == 0 || SelectedMaterialGroupId == 0)
+            if (SelectedMaterialTypeId == 0 || SelectedMaterialGroupId == 0)
             {
                 Error = "Wybierz typ i grupe materiału";
                 ShowErrors = true;
             }
-            if(model.Description == null || model.Description.Length < 5)
+            if (model.Description == null || model.Description.Length < 5)
             {
                 Error = "Pole opisu jest wymagane";
                 ShowErrors = true;
@@ -77,6 +77,8 @@ namespace MyTutoring.Client.Pages
                 Success = true;
                 StateHasChanged();
 
+                NavigationManager.NavigateTo("/");
+                //Task.Delay(2000);
 
                 //NavigationManager.NavigateTo("/");
             }
@@ -86,6 +88,12 @@ namespace MyTutoring.Client.Pages
                 ShowErrors = true;
                 StateHasChanged();
             }
+        }
+
+        private void ClearAll()
+        {
+            model = new MaterialViewModel();
+            //NavigationManager.NavigateTo("/");
         }
     }
 }
