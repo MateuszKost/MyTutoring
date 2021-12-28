@@ -32,9 +32,32 @@
         <div class="@NavMenuCssClass" style="height: calc(100vh - 60px); left: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
             <ul class="nav flex-column  my-auto mx-auto">
                 <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="test" Match="NavLinkMatch.All" @onclick="()=>HideAllMenus()">
+                    <NavLink class="nav-link" @onclick="()=>ShowHomeworksMenu()">
                         <span class="sideoi oi oi-calculator" aria-hidden="true"></span> Zadania
                     </NavLink>
+                    <ul class="nav flex-column">
+                        @if (showHomeworksMenu == true)
+                        {
+                            @if (roleString == "admin" || roleString == "tutor")
+                            {
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="createHomework" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-folder" aria-hidden="true"></span> Utworz zadanie
+                                    </NavLink>
+                                </li>
+                            }
+                            <li class="nav-item px-3">
+                                <NavLink class="nav-link" href="createMaterialGroup" @onclick="() => HideAllMenus()">
+                                    <span class="sideoi oi oi-envelope-open" aria-hidden="true"></span> Otwarte zadania
+                                </NavLink>
+                            </li>
+                            <li class="nav-item px-3">
+                                <NavLink class="nav-link" href="createMaterial" @onclick="() => HideAllMenus()">
+                                    <span class="sideoi oi oi-envelope-closed" aria-hidden="true"></span> Zamkniete zadania
+                                </NavLink>
+                            </li>
+                        }
+                    </ul>
                 </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="counter" @onclick="()=>HideAllMenus()">
@@ -161,6 +184,7 @@
     private bool collapseProfileNavMenu = true;
     private bool showProfileMenu = false;
     private bool showMaterialsMenu = false;
+    private bool showHomeworksMenu = false;
     private string roleString = "";
     private bool roleChecked = false;
     private IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels;
@@ -198,10 +222,19 @@
 
     }
 
+    public void ShowHomeworksMenu()
+    {
+        if (showHomeworksMenu == true)
+            showHomeworksMenu = false;
+        else
+            showHomeworksMenu = true;
+    }
+
     public void HideAllMenus()
     {
         showProfileMenu = false;
         showMaterialsMenu = false;
+        showHomeworksMenu = false;
         collapseNavMenu = true;
         collapseProfileNavMenu = true;
     }

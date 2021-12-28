@@ -4,6 +4,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyTutoringContext))]
-    partial class MyTutoringContextModelSnapshot : ModelSnapshot
+    [Migration("20211228123128_homeworkUpdate")]
+    partial class homeworkUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,10 +124,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<int?>("HomeworkId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaterialGroupId")
+                    b.Property<int>("MaterialGroupId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaterialTypeId")
+                    b.Property<int>("MaterialTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -413,11 +415,13 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataEntities.MaterialsGroup", "MaterialGroup")
                         .WithMany("Materials")
                         .HasForeignKey("MaterialGroupId")
+                        .IsRequired()
                         .HasConstraintName("FK_Material_MaterialGroupId");
 
                     b.HasOne("DataEntities.MaterialType", "MaterialType")
                         .WithMany("Materials")
                         .HasForeignKey("MaterialTypeId")
+                        .IsRequired()
                         .HasConstraintName("FK_Material_MaterialTypeId");
 
                     b.Navigation("Homework");
