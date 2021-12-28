@@ -19,5 +19,6 @@ namespace Models.ViewModels
         public Uri? Url { get; set; }
         public float? Grade { get; set; }
         public bool? Status { get; set; }
+        public int? Id { get; set; }
     }
 }

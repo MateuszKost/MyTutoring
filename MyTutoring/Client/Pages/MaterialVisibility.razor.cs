@@ -16,7 +16,7 @@ namespace MyTutoring.Client.Pages
 
         private void OnSubmit()
         {
-            Students = Students.Where(x => x.StudentName.Contains(Finder.UserName));
+            Students = Students.Where(x => x.StudentName.Contains(Finder.Name));
             StateHasChanged();
         }
 
@@ -28,6 +28,6 @@ namespace MyTutoring.Client.Pages
 
     class Finder
     {
-        public string UserName { get; set; }
+        public string Name { get; set; }
     }
 }

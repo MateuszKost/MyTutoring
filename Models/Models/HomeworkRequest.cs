@@ -2,7 +2,8 @@
 {
     public class HomeworkRequest
     {
-        string UserId { get; set; }
-        bool Status { get; set; }
+        public string UserId { get; set; }
+        public string UserRole { get; set; }
+        public bool Status { get; set; }
     }
 }

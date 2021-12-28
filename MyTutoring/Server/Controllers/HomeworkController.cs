@@ -79,25 +79,46 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("Getall")]
         [Authorize(Roles = "admin, tutor, student")]
-        public async Task<ActionResult<MaterialsViewModel>> GetAll([FromBody] MaterialGroupSingleViewModel materialGroupSingleViewModel)
+        public async Task<ActionResult<HomeworkViewModel>> GetAll([FromBody] HomeworkRequest homeworkRequest)
         {
-            ICollection<MaterialViewModel> materialViewModels = new List<MaterialViewModel>();
-            IEnumerable<Material> materials = new List<Material>();
+            ICollection<HomeworkSingleViewModel> homeworkSingleViewModels = new List<HomeworkSingleViewModel>();
+            IEnumerable<Homework> homeworks = new List<Homework>();
 
-            if (materialGroupSingleViewModel == null)
+            if(homeworkRequest == null)
             {
-                return new MaterialsViewModel { MaterialViewModels = null };
+                return new HomeworkViewModel { Homeworks = null };
             }
 
-            materials = await _uow.MaterialRepo.WhereAsync(m => m.MaterialGroupId == materialGroupSingleViewModel.MaterialGroupId);
-
-            foreach (Material material in materials)
+            switch (homeworkRequest.UserRole)
             {
-                Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
-                materialViewModels.Add(new MaterialViewModel { Name = material.Name = material.FileName, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url });
+                case "tutor":
+                    homeworks = await _uow.HomeworkRepo.WhereAsync(h => h.TutorId == Guid.Parse(homeworkRequest.UserId) && h.Status == homeworkRequest.Status);
+                    break;
+                case "student":
+                    homeworks = await _uow.HomeworkRepo.WhereAsync(h => h.StudentId == Guid.Parse(homeworkRequest.UserId) && h.Status == homeworkRequest.Status);
+                    break;
+                case "admin":
+                    homeworks = await _uow.HomeworkRepo.WhereAsync(h => h.Status == homeworkRequest.Status);
+                    break;
             }
 
-            return new MaterialsViewModel { MaterialViewModels = materialViewModels };
+            foreach (var homework in homeworks)
+            {
+                homeworkSingleViewModels.Add(new HomeworkSingleViewModel
+                {
+                    FileName = "",
+                    Name = homework.Name,
+                    StudentId = homework.StudentId.ToString(),
+                    TutorId = homework.TutorId.ToString(),
+                    EndTime = homework.EndTime,
+                    Data = "",
+                    Grade = homework.Grade,
+                    Status = homework.Status,
+                    Id = homework.Id
+                });
+            }
+
+            return new HomeworkViewModel { Homeworks = homeworkSingleViewModels };
         }
     }
 }
