@@ -1,0 +1,45 @@
+﻿@page "/changeGrade/{HomeworkId:int}"
+@attribute [Authorize]
+
+@if (isLoading)
+{
+    @if (ShowErrors)
+    {
+        <div class="alert alert-danger" role="alert">
+            <p>@Error</p>
+        </div>
+    }
+
+    <div class="card col-lg-4 col-sm-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            <h5 class="card-title">Zmien ocene</h5>
+            <EditForm Model="changeGrade" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="name">Nazwa</label>
+                    <InputText Id="name" type="name" class="form-control" @bind-Value="changeGrade.Name" disabled="true" placeholder=@changeGrade.Name />
+                    <ValidationMessage For="@(() => changeGrade.Name)" />
+                </div>
+                <div class="form-group">
+                    <label for="surname">Status</label>
+                    <InputCheckbox Id="surname" type="surname" @bind-Value="changeGrade.Status"/>
+                    <ValidationMessage For="@(() => changeGrade.Status)" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Ocena</label>
+                    <InputNumber Id="email" class="form-control" @bind-Value="changeGrade.Grade" placeholder=@changeGrade.Grade />
+                    <ValidationMessage For="@(() => changeGrade.Grade)" />
+                </div>                
+                <div class="text-center" style="margin-top: 5px">
+                    <button type="submit" class="btn btn-success">Zmień</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <div>Loading screen...</div>
+}

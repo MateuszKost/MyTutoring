@@ -219,12 +219,9 @@ namespace DataAccessLayer
             {
                 entity.ToTable("TaskSolution");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.FileName)
                     .IsRequired()
                     .HasMaxLength(80);
-
-                entity.Property(e => e.FileSha1)
-                    .IsRequired();
 
                 entity.HasOne(e => e.Homework)
                     .WithMany(h => h.TaskSolutions)

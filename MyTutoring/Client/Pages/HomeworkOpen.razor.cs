@@ -29,7 +29,7 @@ namespace MyTutoring.Client.Pages
 
         private void Navigate(int? homeworkId)
         {
-            NavigationManager.NavigateTo("HomeworkOpen/" + homeworkId);
+            NavigationManager.NavigateTo("Homeworks/" + homeworkId);
         }
     }    
 }

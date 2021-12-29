@@ -21,6 +21,18 @@ namespace MyTutoring.Client.Services.Homework
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
+        public async Task<HomeworkSingleViewModel> GetHomeworkSingleViewModel(int homeworkId)
+        {
+            await _refreshService.Refresh();
+
+            SingleHomeworkRequest homeworkRequest = new SingleHomeworkRequest { HomeworkId = homeworkId };
+
+            var response = await _httpClient.PostAsync("Homework/Get", new StringContent(JsonSerializer.Serialize(homeworkRequest), Encoding.UTF8, "application/json"));
+            HomeworkSingleViewModel homework = JsonSerializer.Deserialize<HomeworkSingleViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return homework;
+        }
+
         public async Task<IEnumerable<HomeworkSingleViewModel>> GetHomeworkViewModelList(HomeworkRequest homeworkRequest)
         {
             await _refreshService.Refresh();
@@ -36,6 +48,36 @@ namespace MyTutoring.Client.Services.Homework
             await _refreshService.Refresh();
 
             var response = await _httpClient.PostAsync("Homework/Create", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<ChangeGradeViewModel> GetHomeworkToChangeGrade(int homeworkId)
+        {
+            await _refreshService.Refresh();
+
+            SingleHomeworkRequest homeworkRequest = new SingleHomeworkRequest { HomeworkId = homeworkId };
+
+            var response = await _httpClient.PostAsync("Homework/GetToChangeGrade", new StringContent(JsonSerializer.Serialize(homeworkRequest), Encoding.UTF8, "application/json"));
+            ChangeGradeViewModel changeGrade = JsonSerializer.Deserialize<ChangeGradeViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            return changeGrade;
+        }
+
+        public async Task<RequestResult> ChangeGrade(ChangeGradeViewModel model)
+        {
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Homework/ChangeGrade", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<RequestResult> AddTaskSolution(SolutionViewModel model)
+        {
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Homework/AddTaskSolution", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
 
             return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }

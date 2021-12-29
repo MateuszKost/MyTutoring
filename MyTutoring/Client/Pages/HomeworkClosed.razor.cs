@@ -17,7 +17,7 @@ namespace MyTutoring.Client.Pages
             var userId = user.FindFirst("id");
             var role = user.FindFirst(ClaimTypes.Role);
 
-            Homeworks = await HomeworkService.GetHomeworkViewModelList(new HomeworkRequest { UserId = userId.Value, UserRole = role.Value, Status = false });
+            Homeworks = await HomeworkService.GetHomeworkViewModelList(new HomeworkRequest { UserId = userId.Value, UserRole = role.Value, Status = true });
             _loading = true;
         }
 
@@ -29,7 +29,7 @@ namespace MyTutoring.Client.Pages
 
         private void Navigate(int? homeworkId)
         {
-            NavigationManager.NavigateTo("HomeworkOpen/" + homeworkId);
+            NavigationManager.NavigateTo("Homeworks/" + homeworkId);
         }
     }
 }

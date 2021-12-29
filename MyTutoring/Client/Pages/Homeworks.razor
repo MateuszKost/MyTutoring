@@ -1,0 +1,96 @@
+﻿@page "/Homeworks/{HomeworkId:int}"
+@attribute [Authorize]
+
+
+@if (isLoading)
+{
+    <div class="text-center">
+        <h1>Zadanie domowe</h1>
+    </div>
+    <div class="card col-xl-6 col-lg-8 col-12" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            @if (Homework != null)
+            {
+                <h5 class="card-title">@Homework.Name</h5>
+            }
+            <div class="card col-12" style="margin-right: auto; margin-left: auto">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Plik z zadaniem</h5>
+                    @if (Homework != null)
+                    {
+                        <div class="file">
+                            <div>
+                                <a class="aalink" href=@Homework.UrlTask>
+                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @Homework.FileName
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card col-12" style="margin-right: auto; margin-left: auto">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Miejsce na zadanie</h5>
+                    @if (Homework.TaskSolutionFileName != null)
+                    {
+                        <div class="file">
+                            <div>
+                                <a class="aalink" href=@Homework.UrlTaskSolution>
+                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @Homework.TaskSolutionFileName
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card col-12" style="margin-right: auto; margin-left: auto">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Stan zadania</h5>
+                    @if (Homework != null)
+                    {
+                        <div>
+                            <div class="col-12">
+                                <span class="col-lg-4 col-sm-6 col-7" style="float: left" aria-hidden="true">Data zakończenia:</span>
+                                <span class="col-lg-8 col-sm-6 col-5" style="float: left" aria-hidden="true">@Homework.EndTime</span>
+                            </div>
+                            <div class="col-12">
+                                <span class="col-lg-4 col-sm-6 col-7" style="float: left" aria-hidden="true">Status:</span>
+                                @if (Homework.Status == false)
+                                {
+                                    <span class="col-lg-8 col-sm-6 col-5" style="float: left" aria-hidden="true">Otwarte</span>
+                                }
+                                else
+                                {
+                                    <span class="col-lg-8 col-sm-6 col-5" style="float: left" aria-hidden="true">Zamkniete</span>                                    
+                                }
+                            </div>
+                            <div class="col-12">
+                                <span class="col-lg-4 col-sm-6 col-7" style="float: left" aria-hidden="true">Ocena:</span>
+                                <span class="col-lg-8 col-sm-6 col-5" style="float: left" aria-hidden="true">@Homework.Grade</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (roleString == "admin")
+            {
+                <div class="text-center" style="margin-top: 5px">
+                    <button type="submit" class="btn btn-success" @onclick="@( () => NavigateToGrade((int)Homework.Id) )">Oceń</button>
+                </div>
+            }
+            @if (roleString == "admin" && Homework.Status == false)
+            {
+                <div class="text-center" style="margin-top: 5px">
+                    <button type="submit" class="btn btn-success" @onclick="@( () => NavigateToSolution((int)Homework.Id) )">Dodaj rozwiązanie</button>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+else
+{
+    <h4>Loading...</h4>
+}

@@ -15,8 +15,10 @@ namespace Models.ViewModels
         public string TutorId { get; set; }
         [Required]
         public DateTime EndTime { get; set; }
-        public string? Data { get; set; }
-        public Uri? Url { get; set; }
+        public string? DataTask { get; set; }
+        public string? TaskSolutionFileName { get; set; }
+        public Uri? UrlTask { get; set; }
+        public Uri? UrlTaskSolution { get; set; }
         public float? Grade { get; set; }
         public bool? Status { get; set; }
         public int? Id { get; set; }

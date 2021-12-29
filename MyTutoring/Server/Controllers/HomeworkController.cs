@@ -27,7 +27,7 @@ namespace MyTutoring.Server.Controllers
         [Authorize(Roles = "admin, tutor")]
         public async Task<ActionResult<RequestResult>> Create([FromBody] HomeworkSingleViewModel homeworkModel)
         {
-            if (homeworkModel == null || homeworkModel.Data == null)
+            if (homeworkModel == null || homeworkModel.DataTask == null)
             {
                 return BadRequest(new RequestResult { Successful = false, Message = "Nie podano wszystkich danych" });
             }
@@ -58,7 +58,7 @@ namespace MyTutoring.Server.Controllers
 
             Homework createdHomework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Name == homeworkModel.Name);
 
-            byte[] file = FileConverter.Base64ToImage(homeworkModel.Data);
+            byte[] file = FileConverter.Base64ToImage(homeworkModel.DataTask);
 
             Material material = new Material()
             {
@@ -84,7 +84,7 @@ namespace MyTutoring.Server.Controllers
             ICollection<HomeworkSingleViewModel> homeworkSingleViewModels = new List<HomeworkSingleViewModel>();
             IEnumerable<Homework> homeworks = new List<Homework>();
 
-            if(homeworkRequest == null)
+            if (homeworkRequest == null)
             {
                 return new HomeworkViewModel { Homeworks = null };
             }
@@ -111,7 +111,7 @@ namespace MyTutoring.Server.Controllers
                     StudentId = homework.StudentId.ToString(),
                     TutorId = homework.TutorId.ToString(),
                     EndTime = homework.EndTime,
-                    Data = "",
+                    DataTask = "",
                     Grade = homework.Grade,
                     Status = homework.Status,
                     Id = homework.Id
@@ -119,6 +119,134 @@ namespace MyTutoring.Server.Controllers
             }
 
             return new HomeworkViewModel { Homeworks = homeworkSingleViewModels };
+        }
+
+        [HttpPost("Get")]
+        [Authorize(Roles = "admin, tutor, student")]
+        public async Task<ActionResult<HomeworkSingleViewModel>> Get([FromBody] SingleHomeworkRequest homeworkRequest)
+        {
+            if (homeworkRequest == null)
+            {
+                return null;
+            }
+
+            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == homeworkRequest.HomeworkId);
+
+            if (homework == null)
+            {
+                return null;
+            }
+
+            Material material = await _uow.MaterialRepo.SingleOrDefaultAsync(h => h.HomeworkId == homeworkRequest.HomeworkId);
+
+            if (material == null)
+            {
+                return null;
+            }
+
+            TaskSolution taskSolution = await _uow.TaskSolutionRepo.SingleOrDefaultAsync(h => h.HomeworkId == homeworkRequest.HomeworkId);
+
+            if (taskSolution != null)
+            {
+                Uri urlTask = await _storageContext.GetAsync(new TaskContainer(), material.FileName);
+                Uri urlSolution = await _storageContext.GetAsync(new TaskSolutionContainer(), material.FileName);
+
+                HomeworkSingleViewModel homeworkSingleViewModel = new HomeworkSingleViewModel
+                {
+                    FileName = material.Name,
+                    Name = homework.Name,
+                    StudentId = homework.StudentId.ToString(),
+                    TutorId = homework.TutorId.ToString(),
+                    EndTime = homework.EndTime,
+                    TaskSolutionFileName = taskSolution.FileName,
+                    UrlTask = urlTask,
+                    UrlTaskSolution = urlSolution,
+                    Grade = homework.Grade,
+                    Status = homework.Status,
+                    Id = homework.Id
+                };
+                return homeworkSingleViewModel;
+            }
+            else
+            {
+                Uri urlTask = await _storageContext.GetAsync(new TaskContainer(), material.FileName);
+
+                HomeworkSingleViewModel homeworkSingleViewModel = new HomeworkSingleViewModel
+                {
+                    FileName = material.Name,
+                    Name = homework.Name,
+                    StudentId = homework.StudentId.ToString(),
+                    TutorId = homework.TutorId.ToString(),
+                    EndTime = homework.EndTime,
+                    UrlTask = urlTask,
+                    Grade = homework.Grade,
+                    Status = homework.Status,
+                    Id = homework.Id
+                };
+
+                return homeworkSingleViewModel;
+            }
+        }
+
+        [HttpPost("GetToChangeGrade")]
+        [Authorize(Roles = "admin, tutor")]
+        public async Task<ActionResult<ChangeGradeViewModel>> GetToChangeGrade([FromBody] SingleHomeworkRequest homeworkRequest)
+        {
+            if (homeworkRequest == null)
+            {
+                return null;
+            }
+
+            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == homeworkRequest.HomeworkId);
+
+            if (homework == null)
+            {
+                return null;
+            }
+
+            return new ChangeGradeViewModel { Id = homework.Id, Name = homework.Name, Grade = homework.Grade, Status = homework.Status };
+        }
+
+        [HttpPost("ChangeGrade")]
+        [Authorize(Roles = "tutor, admin")]
+        public async Task<ActionResult<RequestResult>> ChangeGrade([FromBody] ChangeGradeViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == model.Id);
+            homework.Grade = model.Grade;
+            homework.Status = model.Status;
+            _uow.HomeworkRepo.Update(homework);
+            await _uow.CompleteAsync();
+
+            return Ok(new RequestResult { Successful = true, Message = "Poprawnie zmieniono ocenę." });
+        }
+
+        [HttpPost("AddTaskSolution")]
+        [Authorize(Roles = "student, admin")]
+        public async Task<ActionResult<RequestResult>> AddTaskSolution([FromBody] SolutionViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            byte[] file = FileConverter.Base64ToImage(model.DataTaskSolution);
+
+            TaskSolution taskSolution = new TaskSolution
+            {
+                FileName = model.TaskSolutionFileName,
+                HomeworkId = model.HomeworkId
+            };
+            await _uow.TaskSolutionRepo.AddAsync(taskSolution);
+            await _uow.CompleteAsync();
+
+            _storageContext.AddAsync(new TaskSolutionContainer(), file, taskSolution.FileName);
+
+            return Ok(new RequestResult { Successful = true, Message = "Materiał o nazwie " + taskSolution.FileName });
         }
     }
 }
