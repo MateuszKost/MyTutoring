@@ -121,6 +121,12 @@ namespace DataAccessLayer
                 entity.Property(e => e.FileName)
                     .IsRequired();
 
+                entity.HasOne(e => e.Homework)
+                    .WithMany(m => m.Materials)
+                    .HasForeignKey(e => e.HomeworkId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Material_HomeworkId");
+
                 entity.HasOne(e => e.MaterialType)
                     .WithMany(m => m.Materials)
                     .HasForeignKey(e => e.MaterialTypeId)
@@ -213,12 +219,9 @@ namespace DataAccessLayer
             {
                 entity.ToTable("TaskSolution");
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.FileName)
                     .IsRequired()
                     .HasMaxLength(80);
-
-                entity.Property(e => e.FileSha1)
-                    .IsRequired();
 
                 entity.HasOne(e => e.Homework)
                     .WithMany(h => h.TaskSolutions)

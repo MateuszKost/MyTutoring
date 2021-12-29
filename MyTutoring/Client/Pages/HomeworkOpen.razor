@@ -1,0 +1,54 @@
+﻿@page "/HomeworkOpen"
+@attribute [Authorize]
+
+@if (_loading)
+{
+    <div class="card col-lg-6 col-sm-8 col-xs-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            <h5 class="card-title">Wybierz zadanie do przejrzenia</h5>
+            <EditForm Model="finder" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <label for="userName">Nazwa zadania</label>
+                    </div>
+                    <div>
+                        <InputText Id="userName" class="col-8" @bind-Value="finder.Name" />
+                        <button type="submit" class="col-2 text-center  btn btn-success" style="margin-left: 5px"><i class="oi oi-magnifying-glass"></i></button>
+                    </div>
+                </div>
+            </EditForm>
+            <div class="form-group">
+                <div>
+                    <label class="col-4" style="float: left">Nazwa</label>
+                    <label class="col-4" style="float: left">Status</label>
+                    <label class="col-4" style="float: left">Czas zakończenia</label>
+                </div>
+            </div>
+            @if (Homeworks.Count() > 0)
+            {
+                @foreach (var homework in Homeworks)
+                {
+                    <div class="homework" @onclick="@( () => Navigate(homework.Id) )">
+                        <label class="col-4" style="float: left">@homework.Name</label>
+                        @if (homework.Status == true)
+                        {
+                            <label class="col-4" style="float: left">Zamkniete</label>
+                        }
+                        else
+                        {
+                            <label class="col-4" style="float: left">Otwarte</label>
+                        }
+                        <label class="col-4" style="float: left">@homework.EndTime</label>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h4>Loading...</h4>
+}
+

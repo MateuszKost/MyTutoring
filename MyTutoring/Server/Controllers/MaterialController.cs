@@ -41,7 +41,7 @@ namespace MyTutoring.Server.Controllers
             byte[] file = FileConverter.Base64ToImage(materialModel.Data);
 
             Material material = new Material() { Name = materialModel.Name, Description = materialModel.Description, MaterialGroupId = materialModel.MaterialGroupId, MaterialTypeId = materialModel.MaterialTypeId,
-                FileName = materialModel.FileName};
+                FileName = materialModel.FileName, HomeworkId = null};
             await _uow.MaterialRepo.AddAsync(material);
             await _uow.CompleteAsync();
 
@@ -67,7 +67,7 @@ namespace MyTutoring.Server.Controllers
             foreach(Material material in materials)
             {
                 Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
-                materialViewModels.Add(new MaterialViewModel {Name = material.Name = material.FileName, Description = material.Description, MaterialGroupId = material.MaterialGroupId, MaterialTypeId = material.MaterialTypeId, Url = url });
+                materialViewModels.Add(new MaterialViewModel {Name = material.Name = material.FileName, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url});
             }
 
             return new MaterialsViewModel { MaterialViewModels = materialViewModels };

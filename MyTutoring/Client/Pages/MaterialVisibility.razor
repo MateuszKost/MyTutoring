@@ -1,4 +1,4 @@
-﻿@page "/visibility"
+﻿                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @page "/visibility"
 @attribute [Authorize]
 
 @if (_loading)
@@ -14,7 +14,7 @@
                         <label for="userName">Imie i nazwisko</label>
                     </div>
                     <div>
-                        <InputText Id="userName" class="col-8" @bind-Value="Finder.UserName" />
+                        <InputText Id="userName" class="col-8" @bind-Value="Finder.Name" />
                         <button type="submit" class="col-2 text-center  btn btn-success" style="margin-left: 5px"><i class="oi oi-magnifying-glass"></i></button>
                     </div>
                 </div>

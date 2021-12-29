@@ -1,4 +1,4 @@
-﻿@page "/createMaterial"
+﻿@page "/createHomework"
 @attribute [Authorize]
 
 @if (ShowErrors)
@@ -13,11 +13,12 @@
     <div class="row justify-content-center mb-5">
         <span class="text-success">Materiał został załadowany poprawnie!</span>
     </div>
-    ClearAll();
+    Task.Delay(1000);
+    NavigationManager.NavigateTo("/");
 }
 
 <div class="text-center">
-    <h1>Utwórz materiał</h1>
+    <h1>Utwórz zadanie</h1>
 </div>
 
 <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
@@ -26,7 +27,7 @@
         <div class="text-center">
             <div class="h1 rotate-15"><i class="bi bi-card-image"></i></div>
             <h1 class="h4 text-gray-900 mb-4">
-                Wybierz plik, grupe i typ
+                Wybierz plik i studenta
             </h1>
         </div>
 
@@ -51,50 +52,31 @@
                             <ValidationMessage For="@(() => model.Name)" />
                         </div>
                         <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
-                            <label for="description">Opis</label>
-                            <InputText Id="description" class="form-control" @bind-Value="model.Description" />
-                            <ValidationMessage For="@(() => model.Description)" />
+                            <label for="name">Data zamknięcia zadania</label>
+                            <InputDate Id="name" class="form-control" @bind-Value="model.EndTime" />
+                            <ValidationMessage For="@(() => model.Name)" />
                         </div>
                     </EditForm>
+                    <div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
 
-                    <div class="col-sm-12 col-md-6">
-                        <div class="MaterialType col-md-6 form-group text-center">
-
-                            <label for="selectType">Typ</label>
-                            <select @onchange="OnSelectType" class="form-control" id="selectType">
-
-                                <option value="0"> </option>
-
-                                @if (materialTypeSingleViewModels != null)
-                                {
-                                    foreach (var materialType in materialTypeSingleViewModels)
-                                    {
-                                        <option value="@materialType.MaterialTypeId">@materialType.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                        <div class="col-md-6 form-group text-center">
-
-                            <label for="selectGroup">Grupa</label>
-                            <select @onchange="OnSelectGroup" class="form-control" id="selectGroup">
+                            <label for="selectType">Student</label>
+                            <select @onchange="OnSelectStudent" class="form-control" id="selectType">
 
                                 <option value="0"> </option>
 
-                                @if (materialGroupSingleViewModels != null)
+                                @if (Students != null)
                                 {
-                                    foreach (var materialGroup in materialGroupSingleViewModels)
+                                    foreach (var student in Students)
                                     {
-                                        <option value="@materialGroup.MaterialGroupId">@materialGroup.Name</option>
+                                        <option value="@student.UserId">@student.StudentName</option>
                                     }
                                 }
                             </select>
                         </div>
                     </div>
                     <div class="text-center" style="margin-top: 5px">
-                        <button type="submit" class="btn btn-success">Prześlij</button>
+                        <button type="submit" class="btn btn-success">Utwórz</button>
                     </div>
                 </div>
             </form>

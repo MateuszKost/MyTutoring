@@ -6,6 +6,7 @@ using MyTutoring.Client;
 using MyTutoring.Client.Services;
 using MyTutoring.Client.Services.Authentication;
 using MyTutoring.Client.Services.EditProfile;
+using MyTutoring.Client.Services.Homework;
 using MyTutoring.Client.Services.Material;
 using MyTutoring.Client.Services.MaterialGroup;
 using MyTutoring.Client.Services.MaterialType;
@@ -29,5 +30,6 @@ builder.Services.AddScoped<IMaterialsGroupService, MaterialsGroupService>();
 builder.Services.AddScoped<IMaterialTypeService, MaterialTypeService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
 builder.Services.AddScoped<IMaterialVisibilityService, MaterialVisibilityService>();
+builder.Services.AddScoped<IHomeworkService, HomeworkService>();
 
 await builder.Build().RunAsync();

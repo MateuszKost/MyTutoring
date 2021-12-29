@@ -14,8 +14,19 @@ namespace MyTutoring.Client.Pages
         private ICollection<MaterialViewModel> materialViewModelsTypeTest = new List<MaterialViewModel>();
         private bool isLoading = false;
 
+        protected override Task OnParametersSetAsync()
+        {            
+            StateHasChanged();
+            OnInitializedAsync();            
+            return base.OnParametersSetAsync();
+        }
+
         protected override async Task OnInitializedAsync()
         {
+            materialViewModelsTypeNotes.Clear();
+            materialViewModelsTypeHomework.Clear();
+            materialViewModelsTypeTest.Clear();
+
             baseMaterialViewModels = await MaterialService.GetMaterialViewModelList(MaterialGroupId);
             foreach (var materialViewModel in baseMaterialViewModels)
             {
