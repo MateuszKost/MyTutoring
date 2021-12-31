@@ -1,0 +1,120 @@
+﻿@page "/calendar/createActivity"
+@attribute [Authorize]
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+@if (Success)
+{
+    <div class="row justify-content-center mb-5">
+        <span class="text-success">Materiał został załadowany poprawnie!</span>
+    </div>
+    Task.Delay(1000);
+    NavigationManager.NavigateTo("/");
+}
+
+<div class="text-center">
+    <h1>Utwórz aktywność</h1>
+</div>
+
+<div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+    <div class="card-body">
+
+        <div class="col-12">
+            <form @onsubmit="Create" method="post">
+                <div class="row justify-content-center">
+
+                    <EditForm Model="model" OnValidSubmit="Create">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+                            <label for="name">Wyświetlana nazwa</label>
+                            <InputText Id="name" class="form-control" @bind-Value="model.Name" />
+                            <ValidationMessage For="@(() => model.Name)" />
+                        </div>
+                    </EditForm>
+                    <div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+
+                            <label for="selectType">Student</label>
+                            <select @onchange="OnSelectStudent" class="form-control" id="selectType">
+
+                                <option value="0"> </option>
+
+                                @if (Students != null)
+                                {
+                                    foreach (var student in Students)
+                                    {
+                                        <option value="@student.UserId">@student.StudentName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+
+                            <label for="selectType">Dzień</label>
+                            <select @onchange="OnSelectDay" class="form-control" id="selectType">
+
+                                <option value=0> </option>
+
+                                @if (days != null)
+                                {
+                                    foreach (var day in days)
+                                    {
+                                        <option value="@day.Key">@day.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+
+                            <label for="selectType">Godzina rozpoczęcia</label>
+                            <select @onchange="OnSelectStartTime" class="form-control" id="selectType">
+
+                                <option value=0> </option>
+
+                                @if (startTimeList != null)
+                                {
+                                    foreach (var startTime in startTimeList)
+                                    {
+                                        <option value="@startTime">@startTime</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+
+                            <label for="selectType">Godzina zakończenia</label>
+                            <select @onchange="OnSelectEndTime" class="form-control" id="selectType">
+
+                                <option value=0> </option>
+
+                                @if (endTimeList != null)
+                                {
+                                    foreach (var endTime in endTimeList)
+                                    {
+                                        <option value="@endTime">@endTime</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top: 5px">
+                        <button type="submit" class="btn btn-success">Utwórz</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

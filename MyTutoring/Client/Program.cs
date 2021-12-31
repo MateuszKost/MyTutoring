@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MyTutoring.Client;
 using MyTutoring.Client.Services;
+using MyTutoring.Client.Services.Activities;
 using MyTutoring.Client.Services.Authentication;
 using MyTutoring.Client.Services.EditProfile;
 using MyTutoring.Client.Services.Homework;
@@ -31,5 +32,6 @@ builder.Services.AddScoped<IMaterialTypeService, MaterialTypeService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();
 builder.Services.AddScoped<IMaterialVisibilityService, MaterialVisibilityService>();
 builder.Services.AddScoped<IHomeworkService, HomeworkService>();
+builder.Services.AddScoped<IActivitiesService, ActivitiesService>();
 
 await builder.Build().RunAsync();
