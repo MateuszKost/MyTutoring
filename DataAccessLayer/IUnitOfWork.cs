@@ -11,7 +11,6 @@ namespace DataAccessLayer
         IRepository<MaterialsGroupVisibility> MaterialsGroupVisibilityRepo { get; }
         IRepository<MaterialType> MaterialTypeRepo { get; }
         IRepository<Student> StudentRepo { get; }
-        IRepository<StudentTutor> StudentTutorRepo { get; }
         IRepository<TaskSolution> TaskSolutionRepo { get; }
         IRepository<Tutor> TutorRepo { get; }
         IRepository<UserIdentity> UserIdentityRepo { get; }
