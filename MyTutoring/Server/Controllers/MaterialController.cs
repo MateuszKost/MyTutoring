@@ -38,7 +38,7 @@ namespace MyTutoring.Server.Controllers
                 return BadRequest(new RequestResult { Successful = false, Message = "Plik o takiej nazwie już istnieje" });
             }
 
-            byte[] file = FileConverter.Base64ToImage(materialModel.Data);
+            byte[] file = FileConverter.Base64ToFile(materialModel.Data);
 
             Material material = new Material() { Name = materialModel.Name, Description = materialModel.Description, MaterialGroupId = materialModel.MaterialGroupId, MaterialTypeId = materialModel.MaterialTypeId,
                 FileName = materialModel.FileName, HomeworkId = null};

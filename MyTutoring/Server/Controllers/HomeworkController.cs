@@ -58,7 +58,7 @@ namespace MyTutoring.Server.Controllers
 
             Homework createdHomework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Name == homeworkModel.Name);
 
-            byte[] file = FileConverter.Base64ToImage(homeworkModel.DataTask);
+            byte[] file = FileConverter.Base64ToFile(homeworkModel.DataTask);
 
             Material material = new Material()
             {
@@ -234,7 +234,7 @@ namespace MyTutoring.Server.Controllers
                 return BadRequest("Invalid client request");
             }
 
-            byte[] file = FileConverter.Base64ToImage(model.DataTaskSolution);
+            byte[] file = FileConverter.Base64ToFile(model.DataTaskSolution);
 
             TaskSolution taskSolution = new TaskSolution
             {
