@@ -82,6 +82,8 @@ namespace DataAccessLayer
             {
                 entity.ToTable("Homework");
 
+                entity.HasKey(e => e.Id);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(80);
