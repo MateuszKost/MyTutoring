@@ -244,7 +244,7 @@ namespace MyTutoring.Server.Controllers
             await _uow.TaskSolutionRepo.AddAsync(taskSolution);
             await _uow.CompleteAsync();
 
-            _storageContext.AddAsync(new TaskSolutionContainer(), file, taskSolution.FileName);
+            await _storageContext.AddAsync(new TaskSolutionContainer(), file, taskSolution.FileName);
 
             return Ok(new RequestResult { Successful = true, Message = "Materiał o nazwie " + taskSolution.FileName });
         }

@@ -34,11 +34,6 @@ namespace MyTutoring.Client.Pages
             NavigationManager.NavigateTo("calendar/editActivity" + activityId);
         }
 
-        private void NavigateToCreateActivity()
-        {
-            NavigationManager.NavigateTo("calendar/createActivity");
-        }
-
         private void Delete(int activityId)
         {
             ActivitiesService.DeleteActivity(activityId);

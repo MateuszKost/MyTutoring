@@ -13,13 +13,13 @@ namespace MyTutoring.Server.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class EditProfileController : Controller
+    public class UserController : Controller
     {
         private readonly IConfiguration _configuration;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IUnitOfWork _uow;
 
-        public EditProfileController(IConfiguration configuration)
+        public UserController(IConfiguration configuration)
         {
             _configuration = configuration;
             _uow = DataAccessLayerFactory.CreateUnitOfWork();        
@@ -52,6 +52,38 @@ namespace MyTutoring.Server.Controllers
             }
 
             return BadRequest(new RequestResult { Successful = false, Message = "User id is invalid" });
+        }
+
+        [HttpGet("Getallstudents")]
+        [Authorize(Roles = "admin, tutor")]
+        public async Task<ActionResult<StudentViewModel>> GetAllStudents()
+        {
+            ICollection<StudentSingleViewModel> students = new List<StudentSingleViewModel>();
+
+            var list = await _uow.StudentRepo.GetAllAsync();
+            foreach (var student in list)
+            {
+                User user = await _uow.UserRepo.SingleOrDefaultAsync(x => x.Id == student.UserId);
+                students.Add(new StudentSingleViewModel { StudentName = student.FirstName + " " + student.LastName, Email = user.Email, UserId = student.UserId.ToString() });
+            }
+
+            return new StudentViewModel { Students = students };
+        }
+
+        [HttpGet("Getalltutors")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<StudentViewModel>> GetAllTutors()
+        {
+            ICollection<StudentSingleViewModel> tutors = new List<StudentSingleViewModel>();
+
+            var list = await _uow.TutorRepo.GetAllAsync();
+            foreach (var student in list)
+            {
+                User user = await _uow.UserRepo.SingleOrDefaultAsync(x => x.Id == student.UserId);
+                tutors.Add(new StudentSingleViewModel { StudentName = student.FirstName + " " + student.LastName, Email = user.Email, UserId = student.UserId.ToString() });
+            }
+
+            return new StudentViewModel { Students = tutors };
         }
 
         [HttpPost("Edit")]

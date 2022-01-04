@@ -31,7 +31,7 @@ namespace MyTutoring.Client.Pages
             var userId = user.FindFirst("id");
 
             SelectedTutorId = userId.Value;
-            Students = await MaterialVisibilityService.GetStudents();
+            Students = await UserService.GetStudents();
         }
 
         private void OnSelectStudent(ChangeEventArgs e)

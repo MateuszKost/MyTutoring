@@ -16,23 +16,7 @@ namespace MyTutoring.Server.Controllers
         public MaterialVisibilityController()
         {
             _uow = DataAccessLayerFactory.CreateUnitOfWork();
-        }
-
-        [HttpGet("Getall")]
-        [Authorize(Roles = "admin, tutor, student")]
-        public async Task<ActionResult<StudentViewModel>> GetAll()
-        {
-            ICollection<StudentSingleViewModel> students = new List<StudentSingleViewModel>();
-
-            var list = await _uow.StudentRepo.GetAllAsync();
-            foreach (var student in list)
-            {
-                User user = await _uow.UserRepo.SingleOrDefaultAsync(x => x.Id == student.UserId);
-                students.Add(new StudentSingleViewModel { StudentName = student.FirstName + " " + student.LastName, Email = user.Email, UserId = student.UserId.ToString() });
-            }
-
-            return new StudentViewModel { Students = students };
-        }
+        }        
 
         [HttpPost("Getvisibilitylist")]
         [Authorize(Roles = "admin, tutor")]

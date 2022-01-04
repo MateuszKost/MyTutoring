@@ -19,5 +19,6 @@ namespace Models.ViewModels
         [Required]
         public string? Data { get; set; }
         public Uri? Url { get; set; } 
+        public int? Id { get; set; }
     }
 }

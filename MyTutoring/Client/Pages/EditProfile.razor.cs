@@ -21,7 +21,7 @@ namespace MyTutoring.Client.Pages
 
         public async Task OnSubmit()
         {       
-            var result = await EditProfileService.EditProfile(model);
+            var result = await UserService.EditProfile(model);
 
             if (result.Successful)
             {
@@ -38,7 +38,7 @@ namespace MyTutoring.Client.Pages
 
         private async Task LoadData()
         {
-            model = await EditProfileService.GetEditProfileModel();
+            model = await UserService.GetEditProfileModel();
         }
     }
 }

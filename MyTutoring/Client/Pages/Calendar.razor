@@ -4,13 +4,7 @@
 @if (_loading)
 {
     <div class="card col-lg-6 col-sm-8 col-xs-8" style="margin-right: auto; margin-left: auto">
-        <div class="card-body">
-            @if (roleString == "tutor")
-            {
-                <div style="padding-top: 10px; padding-bottom: 10px;">
-                    <button type="submit" class="text-center btn btn-success" @onclick="@( () => NavigateToCreateActivity())">Utwórz aktywność</button>
-                </div>
-            }
+        <div class="card-body">            
             <EditForm Model="finder" OnValidSubmit="OnSubmit">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
@@ -42,11 +36,15 @@
                         <label class="col-2" style="float: left">@activity.DayOfWeek</label>
                         <label class="col-2" style="float: left">@activity.StartTime</label>
                         <label class="col-2" style="float: left">@activity.EndTime</label>
-                        <label class="col-2" style="float: left">@activity.UserName</label>
                         @if (roleString == "tutor")
                         {
+                            <label class="col-2" style="float: left">@activity.UserName</label>
                             <button type="submit" class="text-center col-1 btn btn-success" style="float: left" @onclick="@( () => NavigateToEditActivity(activity.Id) )"><i class="oi oi-pencil"></i></button>
                             <button type="danger" class="text-center col-1 btn btn-danger" style="float: left" @onclick="@( () => Delete(activity.Id) )"><i class="oi oi-trash"></i></button>
+                        }
+                        else
+                        {
+                            <label class="col-4" style="float: left">@activity.UserName</label>                            
                         }
                     </div>
                 }

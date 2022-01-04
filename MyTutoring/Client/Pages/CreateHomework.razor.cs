@@ -24,7 +24,7 @@ namespace MyTutoring.Client.Pages
 
             model.EndTime = DateTime.Now;
             SelectedTutorId = userId.Value;
-            Students = await MaterialVisibilityService.GetStudents();
+            Students = await UserService.GetStudents();
         }
 
         private void OnSelectStudent(ChangeEventArgs e)

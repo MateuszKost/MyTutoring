@@ -1,16 +1,23 @@
 ﻿using Models.ViewModels;
+using System.Security.Claims;
 
 namespace MyTutoring.Client.Pages
 {
-    public partial class MaterialVisibility
+    public partial class StudentList
     {
         IEnumerable<StudentSingleViewModel> Students;
         Finder Finder = new Finder();
         bool _loading = false;
+        string roleString;
 
         protected override async Task OnInitializedAsync()
         {
-            Students = await MaterialVisibilityService.GetStudents();
+            var state = await AuthState.GetAuthenticationStateAsync();
+            var user = state.User;
+            var userId = user.FindFirst("id");
+            var role = user.FindFirst(ClaimTypes.Role);
+            roleString = role.Value;
+            Students = await UserService.GetStudents();
             _loading = true;
         }
 
@@ -23,6 +30,11 @@ namespace MyTutoring.Client.Pages
         private void Navigate(string userId)
         {
             NavigationManager.NavigateTo("changeVisibility/" + userId); 
+        }
+
+        private void Delete(string userId)
+        {
+            //deleteStudent
         }
     }
 

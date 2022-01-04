@@ -56,7 +56,7 @@ namespace MyTutoring.Client.Services.Authentication
         public async Task Logout()
         {
             await _refreshService.Refresh();
-            var result = await _httpClient.DeleteAsync("Authentication/Logout");
+            var result = await _httpClient.DeleteAsync("Authentication/logout");
             if (result.IsSuccessStatusCode)
             {
                 await _localStorage.RemoveItemAsync("authToken");

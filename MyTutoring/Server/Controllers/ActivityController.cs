@@ -63,43 +63,30 @@ namespace MyTutoring.Server.Controllers
             }
 
             IEnumerable<Activity> dbActivities = new List<Activity>();
-            string userName = "";
-            dbActivities = await _uow.ActivityRepo.GetAllAsync();
+            string userName = "";           
 
-            if (userInfo.Role == "student")
+            dbActivities = await _uow.ActivityRepo.GetAllAsync();
+            Activity? dbActivityTutor = dbActivities.FirstOrDefault(a => a.TutorId == Guid.Parse(userInfo.Id));
+            Activity? dbActivityStudent = dbActivities.FirstOrDefault(a => a.StudentId == Guid.Parse(userInfo.Id));
+            if (dbActivityTutor == null && dbActivityStudent == null)
             {
-                Activity? dbActivity = dbActivities.FirstOrDefault(a => a.StudentId == Guid.Parse(userInfo.Id));
-                if (dbActivity != null)
-                {
-                    dbActivities = await _uow.ActivityRepo.WhereAsync(a => a.StudentId == Guid.Parse(userInfo.Id));
-                    Student student = await _uow.StudentRepo.SingleOrDefaultAsync(s => s.UserId == Guid.Parse(userInfo.Id));
-                    userName = student.FirstName + " " + student.LastName;
-                }
-                else
-                {
-                    return new ActivityViewModel { Activities = activities };
-                }
-            }
-            else if (userInfo.Role == "tutor")
-            {
-                dbActivities = await _uow.ActivityRepo.GetAllAsync();
-                Activity? dbActivity = dbActivities.FirstOrDefault(a => a.TutorId == Guid.Parse(userInfo.Id));
-                if (dbActivity != null)
-                {
-                    dbActivities = await _uow.ActivityRepo.WhereAsync(a => a.TutorId == Guid.Parse(userInfo.Id));
-                    Tutor tutor = await _uow.TutorRepo.SingleOrDefaultAsync(t => t.UserId == Guid.Parse(userInfo.Id));
-                    userName = tutor.FirstName + " " + tutor.LastName;
-                }
-                else
-                {
-                    return new ActivityViewModel { Activities = activities };
-                }
+                return new ActivityViewModel { Activities = activities };
             }
 
             Dictionary<int, string> daysOfWeek = ActivityTimeList.CreateDayOfWeek();
 
             foreach (Activity activity in dbActivities)
             {
+                if (userInfo.Role == "student")
+                {
+                    Tutor tutor = await _uow.TutorRepo.SingleOrDefaultAsync(t => t.UserId == activity.TutorId);
+                    userName = tutor.FirstName + " " + tutor.LastName;
+                }
+                else if (userInfo.Role == "tutor")
+                {
+                    Student student = await _uow.StudentRepo.SingleOrDefaultAsync(t => t.UserId == activity.StudentId);
+                    userName = student.FirstName + " " + student.LastName;
+                }
                 activities.Add(new ActivitySingleViewModel { Id = activity.Id, Name = activity.Name, UserName = userName, StartTime = activity.StartTime, EndTime = activity.EndTime, DayOfWeek = daysOfWeek[activity.DayOfWeek] });
             }
 

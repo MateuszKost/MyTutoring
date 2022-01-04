@@ -1,0 +1,51 @@
+﻿@page "/studentList"
+@attribute [Authorize]
+
+@if (_loading)
+{
+    <div class="card col-lg-6 col-sm-8 col-xs-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
+            <h5 class="card-title">Lista uczniów</h5>
+            <EditForm Model="Finder" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <label for="userName">Imie i nazwisko</label>
+                    </div>
+                    <div>
+                        <InputText Id="userName" class="col-10" style="float: left;" @bind-Value="Finder.Name" />
+                        <button type="submit" class="col-2 text-center  btn btn-success" style="float: left;"><i class="oi oi-magnifying-glass"></i></button>
+                    </div>
+                </div>
+            </EditForm>
+            <div class="form-group">
+                <label class="col-5" style="float: left;">Imie i nazwisko</label>
+                <label class="col-5" style="padding-left: 5px; float: left;">adres email</label>
+            </div>
+            @if (Students.Count() > 0)
+            {
+                @foreach (var student in Students)
+                {
+                    <div class="form-group">
+                        <label class="col-5" style="float: left;">@student.StudentName</label>
+                        <label class="col-5" style="padding-left: 5px; float: left;">@student.Email</label>
+                        @if (roleString == "admin")
+                        {
+                            <button type="submit" class="text-center col-1 btn btn-success" style="float: left; margin-bottom: 5px;" @onclick="@( () => Navigate(student.UserId) )"><i class="oi oi-eye"></i></button>
+                            <button type="submit" class="text-center col-1 btn btn-danger" style="float: left; margin-bottom: 5px;" @onclick="@( () => Delete(student.UserId) )"><i class="oi oi-trash"></i></button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="text-center col-2 btn btn-success" style="float: left; margin-bottom: 5px;" @onclick="@( () => Navigate(student.UserId) )"><i class="oi oi-eye"></i></button>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else
+{
+    <h4>Loading...</h4>
+}

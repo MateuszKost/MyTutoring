@@ -19,9 +19,6 @@ namespace Services.EmailService
         {
             var mailMessage = CreateEmailMessage(message);
             await SendAsync(mailMessage);
-
-            //var emailMessage = CreateEmailMessage(message);
-            //Send(emailMessage);
         }
 
         private async Task SendAsync(MimeMessage mailMessage)
@@ -38,7 +35,6 @@ namespace Services.EmailService
                 }
                 catch
                 {
-                    //log an error message or throw an exception, or both.
                     throw;
                 }
                 finally
@@ -58,6 +54,9 @@ namespace Services.EmailService
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
             return emailMessage;
         }
+
+
+
         private void Send(MimeMessage mailMessage)
         {
             using (var client = new SmtpClient())

@@ -26,7 +26,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, MyTutoringAuthenticationStateProvider>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<ITestService, TestService>();
-builder.Services.AddScoped<IEditProfileService, EditProfileService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMaterialsGroupService, MaterialsGroupService>();
 builder.Services.AddScoped<IMaterialTypeService, MaterialTypeService>();
 builder.Services.AddScoped<IMaterialService, MaterialService>();

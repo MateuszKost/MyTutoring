@@ -63,14 +63,15 @@ namespace MyTutoring.Server.Controllers
             }
 
             materials = await _uow.MaterialRepo.WhereAsync(m => m.MaterialGroupId == materialGroupSingleViewModel.MaterialGroupId);
+            MaterialsGroup materialsGroup = await _uow.MaterialsGroupRepo.SingleOrDefaultAsync(m => m.Id == materialGroupSingleViewModel.MaterialGroupId);
 
             foreach(Material material in materials)
             {
                 Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
-                materialViewModels.Add(new MaterialViewModel {Name = material.Name = material.FileName, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url});
+                materialViewModels.Add(new MaterialViewModel {Id = material.Id, Name = material.Name, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url});
             }
 
-            return new MaterialsViewModel { MaterialViewModels = materialViewModels };
+            return new MaterialsViewModel { MaterialViewModels = materialViewModels, MaterialGroupName = materialsGroup.Name };
         }
     }
 }
