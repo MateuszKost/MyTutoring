@@ -21,7 +21,7 @@ namespace MyTutoring.Client.Services.Material
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
-        public async Task<IEnumerable<MaterialViewModel>> GetMaterialViewModelList(int materialGroupId)
+        public async Task<MaterialsViewModel> GetMaterialViewModelList(int materialGroupId)
         {
             await _refreshService.Refresh();
             var model = new MaterialGroupSingleViewModel { MaterialGroupId = materialGroupId, Name = "connect" };
@@ -29,7 +29,7 @@ namespace MyTutoring.Client.Services.Material
             var response = await _httpClient.PostAsync("Material/Getall", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
             MaterialsViewModel materialsGroupViewModel = JsonSerializer.Deserialize<MaterialsViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return materialsGroupViewModel.MaterialViewModels;
+            return materialsGroupViewModel;
         }
 
         public async Task<RequestResult> CreateMaterial(MaterialViewModel model)

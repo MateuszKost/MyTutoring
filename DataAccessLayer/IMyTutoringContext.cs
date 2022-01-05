@@ -12,7 +12,6 @@ namespace DataAccessLayer
         DbSet<MaterialsGroupVisibility> MaterialsGroupVisibilities { get; set; }
         DbSet<MaterialType> MaterialTypes { get; set; }
         DbSet<Student> Students { get; set; }
-        DbSet<StudentTutor> StudentsTutors { get; set; }
         DbSet<TaskSolution> TaskSolutions { get; set; }
         DbSet<Tutor> Tutors { get; set; }
         DbSet<UserIdentity> UserIdentities { get; set; }

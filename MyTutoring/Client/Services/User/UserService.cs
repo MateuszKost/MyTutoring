@@ -9,12 +9,12 @@ using System.Text.Json;
 
 namespace MyTutoring.Client.Services.EditProfile
 {
-    public class EditProfileService : IEditProfileService
+    public class UserService : IUserService
     {
         private readonly HttpClient _httpClient;
         private readonly IRefreshService _refreshService;
 
-        public EditProfileService(HttpClient httpClient,
+        public UserService(HttpClient httpClient,
                            AuthenticationStateProvider authenticationStateProvider,
                            ILocalStorageService localStorage)
         {
@@ -22,18 +22,34 @@ namespace MyTutoring.Client.Services.EditProfile
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
         }
 
+        public async Task<IEnumerable<StudentSingleViewModel>> GetStudents()
+        {
+            await _refreshService.Refresh();
+            StudentViewModel studentViewModel = await _httpClient.GetFromJsonAsync<StudentViewModel>("User/Getallstudents");
+
+            return studentViewModel.Students;
+        }
+
+        public async Task<IEnumerable<StudentSingleViewModel>> GetTutors()
+        {
+            await _refreshService.Refresh();
+            StudentViewModel studentViewModel = await _httpClient.GetFromJsonAsync<StudentViewModel>("User/Getalltutors");
+
+            return studentViewModel.Students;
+        }
+
         public async Task<EditProfileViewModel?> GetEditProfileModel()
         {
             await _refreshService.Refresh();
 
-            return await _httpClient.GetFromJsonAsync<EditProfileViewModel>("EditProfile/Get");
+            return await _httpClient.GetFromJsonAsync<EditProfileViewModel>("User/Get");
         }
 
         public async Task<RequestResult> EditProfile(EditProfileViewModel model)
         {
             await _refreshService.Refresh();
 
-            var response = await _httpClient.PostAsync("EditProfile/Edit", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+            var response = await _httpClient.PostAsync("User/Edit", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
 
             return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }

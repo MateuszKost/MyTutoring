@@ -31,39 +31,68 @@
 
         <div class="@NavMenuCssClass" style="height: calc(100vh - 60px); left: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
             <ul class="nav flex-column  my-auto mx-auto">
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" @onclick="()=>ShowHomeworksMenu()">
-                        <span class="sideoi oi oi-calculator" aria-hidden="true"></span> Zadania
-                    </NavLink>
-                    <ul class="nav flex-column">
-                        @if (showHomeworksMenu == true)
-                        {
-                            @if (roleString == "admin" || roleString == "tutor")
+                @if (roleString == "student" || roleString == "tutor")
+                {
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" @onclick="()=>ShowHomeworksMenu()">
+                            <span class="sideoi oi oi-calculator" aria-hidden="true"></span> Zadania
+                        </NavLink>
+                        <ul class="nav flex-column">
+                            @if (showHomeworksMenu == true)
                             {
+                                @if (roleString == "tutor")
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="createHomework" @onclick="() => HideAllMenus()">
+                                            <span class="sideoi oi oi-folder" aria-hidden="true"></span> Utworz zadanie
+                                        </NavLink>
+                                    </li>
+                                }
                                 <li class="nav-item px-3">
-                                    <NavLink class="nav-link" href="createHomework" @onclick="() => HideAllMenus()">
-                                        <span class="sideoi oi oi-folder" aria-hidden="true"></span> Utworz zadanie
+                                    <NavLink class="nav-link" href="HomeworkOpen" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-envelope-open" aria-hidden="true"></span> Otwarte zadania
+                                    </NavLink>
+                                </li>
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="HomeworkClosed" @onclick="() => HideAllMenus()">
+                                        <span class="sideoi oi oi-envelope-closed" aria-hidden="true"></span> Zamkniete zadania
                                     </NavLink>
                                 </li>
                             }
-                            <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="HomeworkOpen" @onclick="() => HideAllMenus()">
-                                    <span class="sideoi oi oi-envelope-open" aria-hidden="true"></span> Otwarte zadania
-                                </NavLink>
-                            </li>
-                            <li class="nav-item px-3">
-                                <NavLink class="nav-link" href="HomeworkClosed" @onclick="() => HideAllMenus()">
-                                    <span class="sideoi oi oi-envelope-closed" aria-hidden="true"></span> Zamkniete zadania
-                                </NavLink>
-                            </li>
-                        }
-                    </ul>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="counter" @onclick="()=>HideAllMenus()">
-                        <span class="sideoi oi oi-calendar" aria-hidden="true"></span> Moje zajęcia
-                    </NavLink>
-                </li>
+                        </ul>
+                    </li>
+                    @if (roleString == "student")
+                    {
+                        <li class="nav-item px-3">
+                            <NavLink class="nav-link" href="calendar" @onclick="()=>HideAllMenus()">
+                                <span class="sideoi oi oi-calendar" aria-hidden="true"></span> Moje zajęcia
+                            </NavLink>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item px-3">
+                            <NavLink class="nav-link" @onclick="()=>ShowCalendarMenu()">
+                                <span class="sideoi oi oi-calendar" aria-hidden="true"></span> Zajęcia
+                            </NavLink>
+                            <ul class="nav flex-column">
+                                @if (showCalendarMenu == true)
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="calendar" @onclick="()=>HideAllMenus()">
+                                            <span class="sideoi oi oi-calendar" aria-hidden="true"></span> Moje zajęcia
+                                        </NavLink>
+                                    </li>
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="createActivity" @onclick="() => HideAllMenus()">
+                                            <span class="sideoi oi oi-pencil" aria-hidden="true"></span> Utwórz aktywność
+                                        </NavLink>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" @onclick="()=>ShowMaterialsMenu()">
                         <span class="sideoi oi oi-list" aria-hidden="true"></span> Materiały pomocnicze
@@ -73,11 +102,6 @@
                         {
                             @if (roleString == "admin" || roleString == "tutor")
                             {
-                                <li class="nav-item px-3">
-                                    <NavLink class="nav-link" href="visibility" @onclick="() => HideAllMenus()">
-                                        <span class="sideoi oi oi-eye" aria-hidden="true"></span> Ustaw widoczność
-                                    </NavLink>
-                                </li>
                                 <li class="nav-item px-3">
                                     <NavLink class="nav-link" href="createMaterialGroup" @onclick="() => HideAllMenus()">
                                         <span class="sideoi oi oi-folder" aria-hidden="true"></span> Utwórz grupę materiałów
@@ -107,7 +131,7 @@
                 {
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" @onclick="()=>ShowProfileMenu()">
-                            <span class="sideoi oi oi-people" aria-hidden="true"></span> Profile
+                            <span class="sideoi oi oi-pencil" aria-hidden="true"></span> Generator Profili
                         </NavLink>
                         <ul class="nav flex-column">
                             @if (showProfileMenu == true)
@@ -123,6 +147,29 @@
                                 <li class="nav-item px-3">
                                     <NavLink class="nav-link" href="registerStudent" @onclick="()=>HideAllMenus()">
                                         <span class="sideoi oi oi-plus" aria-hidden="true"></span> Wygeneruj profil ucznia
+                                    </NavLink>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" @onclick="()=>ShowUserMenu()">
+                            <span class="sideoi oi oi-people" aria-hidden="true"></span> Użytkownicy
+                        </NavLink>
+                        <ul class="nav flex-column">
+                            @if (showUserMenu == true)
+                            {
+                                @if (roleString == "admin")
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="tutorList" @onclick="() => HideAllMenus()">
+                                            <span class="sideoi oi oi-people" aria-hidden="true"></span> Wyświetl listę korepetytorów
+                                        </NavLink>
+                                    </li>
+                                }
+                                <li class="nav-item px-3">
+                                    <NavLink class="nav-link" href="studentList" @onclick="()=>HideAllMenus()">
+                                        <span class="sideoi oi oi-people" aria-hidden="true"></span> Wyświetl listę uczniów
                                     </NavLink>
                                 </li>
                             }
@@ -183,8 +230,10 @@
     private bool collapseNavMenu = true;
     private bool collapseProfileNavMenu = true;
     private bool showProfileMenu = false;
+    private bool showUserMenu = false;
     private bool showMaterialsMenu = false;
     private bool showHomeworksMenu = false;
+    private bool showCalendarMenu = false;
     private string roleString = "";
     private bool roleChecked = false;
     private IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels;
@@ -210,7 +259,14 @@
             showMaterialsMenu = false;
         else
             showMaterialsMenu = true;
+    }
 
+     public void ShowCalendarMenu()
+    {
+        if (showCalendarMenu == true)
+            showCalendarMenu = false;
+        else
+            showCalendarMenu = true;
     }
 
     public void ShowProfileMenu()
@@ -219,7 +275,14 @@
             showProfileMenu = false;
         else
             showProfileMenu = true;
+    }
 
+    public void ShowUserMenu()
+    {
+        if (showUserMenu == true)
+            showUserMenu = false;
+        else
+            showUserMenu = true;
     }
 
     public void ShowHomeworksMenu()

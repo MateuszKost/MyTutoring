@@ -6,7 +6,7 @@ namespace Services.FileConverter
     {
         public static long MaxFileSize = 1024 * 1024 * 15;
 
-        public static async Task<string> IBrowserFileImageToBase64Async(IBrowserFile file)
+        public static async Task<string> IBrowserFileToBase64Async(IBrowserFile file)
         {
             var contentType = file.ContentType;
 
@@ -24,12 +24,12 @@ namespace Services.FileConverter
                 throw new Exception();
         }
 
-        public static string ImageBytesToBase64(byte[] file)
+        public static string FileBytesToBase64(byte[] file)
         {
             return Convert.ToBase64String(file);
         }
 
-        public static byte[] Base64ToImage(string base64)
+        public static byte[] Base64ToFile(string base64)
         {
             return Convert.FromBase64String(base64);
         }

@@ -24,7 +24,7 @@ namespace MyTutoring.Client.Pages
         private async void LoadFile(InputFileChangeEventArgs eventArgs)
         {
             IBrowserFile file = eventArgs.File;
-            model.DataTaskSolution = await FileConverter.IBrowserFileImageToBase64Async(file);
+            model.DataTaskSolution = await FileConverter.IBrowserFileToBase64Async(file);
             model.TaskSolutionFileName = file.Name;
         }
 

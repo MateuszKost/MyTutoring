@@ -14,7 +14,7 @@ namespace MyTutoring.BlobStorageManager.Context
             _storage = storage;
         }
 
-        public async void AddAsync(TContainer containter, byte[] file, string name)
+        public async Task AddAsync(TContainer containter, byte[] file, string name)
         {
             var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
 

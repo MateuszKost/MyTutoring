@@ -20,15 +20,7 @@ namespace MyTutoring.Client.Services.MaterialVisibility
         {
             _httpClient = httpClient;
             _refreshService = ClientFactory.CreateRefreshService(httpClient, authenticationStateProvider, localStorage);
-        }
-
-        public async Task<IEnumerable<StudentSingleViewModel>> GetStudents()
-        {
-            await _refreshService.Refresh();
-            StudentViewModel studentViewModel = await _httpClient.GetFromJsonAsync<StudentViewModel>("MaterialVisibility/Getall");
-
-            return studentViewModel.Students;
-        }
+        }        
 
         public async Task<ICollection<VisibilitySingleViewModel>> GetVisibilityList(string studentId)
         {

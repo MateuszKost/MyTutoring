@@ -1,20 +1,28 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
+using Models.Models;
 using Models.ViewModels;
-using Services.FileConverter;
 
 namespace MyTutoring.Client.Pages
 {
-    public partial class CreateHomework
+    public partial class CreateActivity
     {
-        public readonly HomeworkSingleViewModel model = new HomeworkSingleViewModel();
+        public readonly ActivitySingleViewModel model = new ActivitySingleViewModel();
         private IEnumerable<StudentSingleViewModel> Students;
+        private Dictionary<int, string> days = ActivityTimeList.CreateDayOfWeek();
+        private IEnumerable<float> startTimeList = ActivityTimeList.CreateActivityTimeList();
+        private IEnumerable<float> endTimeList = ActivityTimeList.CreateActivityTimeList();
+
         public bool ShowErrors { get; set; }
         public bool Success { get; set; } = false;
         string Error { get; set; }
 
         public string SelectedStudentId { get; set; }
         public string SelectedTutorId { get; set; }
+        public int SelectedDay { get; set; }
+        public float SelectedStartTime { get; set; }
+        public float SelectedEndTime { get; set; }
+
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -22,7 +30,6 @@ namespace MyTutoring.Client.Pages
             var user = state.User;
             var userId = user.FindFirst("id");
 
-            model.EndTime = DateTime.Now;
             SelectedTutorId = userId.Value;
             Students = await UserService.GetStudents();
         }
@@ -33,14 +40,27 @@ namespace MyTutoring.Client.Pages
             Console.WriteLine(SelectedStudentId);
         }
 
-        private async void LoadFile(InputFileChangeEventArgs eventArgs)
+        private void OnSelectDay(ChangeEventArgs e)
         {
-            IBrowserFile file = eventArgs.File;
-            model.DataTask = await FileConverter.IBrowserFileToBase64Async(file);
-            model.FileName = file.Name;
+            SelectedDay = Int32.Parse(e.Value.ToString());
+            Console.WriteLine(SelectedStudentId);
         }
 
-        private async void UploadFiles()
+        private void OnSelectStartTime(ChangeEventArgs e)
+        {
+            SelectedStartTime = float.Parse(e.Value.ToString());
+            endTimeList = endTimeList.Where(s => s > SelectedStartTime);
+            Console.WriteLine(SelectedStudentId);
+        }
+
+        private void OnSelectEndTime(ChangeEventArgs e)
+        {
+            SelectedEndTime = float.Parse(e.Value.ToString());
+            startTimeList = startTimeList.Where(s => s < SelectedEndTime);
+            Console.WriteLine(SelectedStudentId);
+        }
+
+        private async void Create()
         {
             ShowErrors = false;
 
@@ -52,16 +72,17 @@ namespace MyTutoring.Client.Pages
 
             model.StudentId = SelectedStudentId;
             model.TutorId = SelectedTutorId;
+            model.StartTime = SelectedStartTime;
+            model.EndTime = SelectedEndTime;
+            model.DayOfWeek = days[SelectedDay];
 
-            var result = await HomeworkService.CreateHomework(model);
+            var result = await ActivitiesService.CreateActivity(model);
 
             if (result.Successful)
             {
                 ShowErrors = false;
                 Success = true;
                 StateHasChanged();
-
-
                 //NavigationManager.NavigateTo("/");
             }
             else

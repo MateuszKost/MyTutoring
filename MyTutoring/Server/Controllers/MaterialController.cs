@@ -38,7 +38,7 @@ namespace MyTutoring.Server.Controllers
                 return BadRequest(new RequestResult { Successful = false, Message = "Plik o takiej nazwie już istnieje" });
             }
 
-            byte[] file = FileConverter.Base64ToImage(materialModel.Data);
+            byte[] file = FileConverter.Base64ToFile(materialModel.Data);
 
             Material material = new Material() { Name = materialModel.Name, Description = materialModel.Description, MaterialGroupId = materialModel.MaterialGroupId, MaterialTypeId = materialModel.MaterialTypeId,
                 FileName = materialModel.FileName, HomeworkId = null};
@@ -63,14 +63,15 @@ namespace MyTutoring.Server.Controllers
             }
 
             materials = await _uow.MaterialRepo.WhereAsync(m => m.MaterialGroupId == materialGroupSingleViewModel.MaterialGroupId);
+            MaterialsGroup materialsGroup = await _uow.MaterialsGroupRepo.SingleOrDefaultAsync(m => m.Id == materialGroupSingleViewModel.MaterialGroupId);
 
             foreach(Material material in materials)
             {
                 Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
-                materialViewModels.Add(new MaterialViewModel {Name = material.Name = material.FileName, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url});
+                materialViewModels.Add(new MaterialViewModel {Id = material.Id, Name = material.Name, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url});
             }
 
-            return new MaterialsViewModel { MaterialViewModels = materialViewModels };
+            return new MaterialsViewModel { MaterialViewModels = materialViewModels, MaterialGroupName = materialsGroup.Name };
         }
     }
 }

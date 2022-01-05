@@ -22,7 +22,6 @@ namespace DataAccessLayer
         public virtual DbSet<MaterialsGroupVisibility> MaterialsGroupVisibilities { get; set; }
         public virtual DbSet<MaterialType> MaterialTypes { get; set; }
         public virtual DbSet<Student> Students { get; set; }
-        public virtual DbSet<StudentTutor> StudentsTutors { get; set; }
         public virtual DbSet<TaskSolution> TaskSolutions { get; set; }
         public virtual DbSet<Tutor> Tutors { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -82,6 +81,8 @@ namespace DataAccessLayer
             modelBuilder.Entity<Homework>(entity =>
             {
                 entity.ToTable("Homework");
+
+                entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -194,26 +195,7 @@ namespace DataAccessLayer
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
                     .HasMaxLength(20);
-            });
-
-            modelBuilder.Entity<StudentTutor>(entity =>
-            {
-                entity.ToTable("StudentTutor");
-
-                entity.HasKey(e => new { e.StudentId, e.TutorId });
-
-                entity.HasOne(e => e.Student)
-                    .WithMany(s => s.StudentsTutors)
-                    .HasForeignKey(e => e.StudentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StudentTutor_StudentId");
-
-                entity.HasOne(e => e.Tutor)
-                    .WithMany(t => t.StudentsTutors)
-                    .HasForeignKey(e => e.TutorId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StudentTutor_TutorId");
-            });
+            });            
 
             modelBuilder.Entity<TaskSolution>(entity =>
             {

@@ -153,11 +153,10 @@ namespace MyTutoring.Server.Controllers
                 }
             }
 
-            return BadRequest(new RequestResult { Successful = false, Message = "Username and password are invalid." });
+            return BadRequest(new RequestResult { Successful = false, Message = "Nazwa użytownika lub hasło jest niepoprawne." });
         }
 
         [HttpPost("refresh")]
-        //[Authorize(Roles = "admin, student, teacher")]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
         {
             if (refreshRequest == null)
@@ -195,8 +194,7 @@ namespace MyTutoring.Server.Controllers
             return Ok(response);
         }
 
-        [Authorize]
-        [Authorize(Roles = "admin, student, teacher")]
+        [Authorize(Roles = "admin, student, tutor")]
         [HttpDelete("logout")]
         public async Task<IActionResult> Logout()
         {

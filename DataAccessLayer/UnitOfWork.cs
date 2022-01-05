@@ -95,20 +95,7 @@ namespace DataAccessLayer
                 }
                 return _studentRepo;
             }
-        }
-
-        private IRepository<StudentTutor>? _studentTutorRepo;
-        public IRepository<StudentTutor> StudentTutorRepo
-        {
-            get
-            {
-                if (_studentTutorRepo == null)
-                {
-                    _studentTutorRepo = new Repository<StudentTutor>(_myTutoringContext.StudentsTutors);
-                }
-                return _studentTutorRepo;
-            }
-        }
+        }               
 
         private IRepository<TaskSolution>? _taskSolutionRepo;
         public IRepository<TaskSolution> TaskSolutionRepo

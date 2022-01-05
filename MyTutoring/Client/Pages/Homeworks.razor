@@ -74,13 +74,13 @@
                     }
                 </div>
             </div>
-            @if (roleString == "admin")
+            @if (roleString == "tutor")
             {
                 <div class="text-center" style="margin-top: 5px">
                     <button type="submit" class="btn btn-success" @onclick="@( () => NavigateToGrade((int)Homework.Id) )">Oceń</button>
                 </div>
             }
-            @if (roleString == "admin" && Homework.Status == false)
+            @if (roleString == "student" && Homework.Status == false)
             {
                 <div class="text-center" style="margin-top: 5px">
                     <button type="submit" class="btn btn-success" @onclick="@( () => NavigateToSolution((int)Homework.Id) )">Dodaj rozwiązanie</button>
