@@ -287,7 +287,7 @@ namespace DataAccessLayer.Mock
                 {
                     StudentId = students.First().UserId,
                     MaterialsGroupId = materialsGroups.Last().Id,
-                    IsVisible = true,
+                    IsVisible = false,
                     Student = students.First(),
                     MaterialsGroup = materialsGroups.Last()
                 }

@@ -13,9 +13,16 @@ namespace MyTutoring.Server.Controllers
     {
         private readonly IUnitOfWork _uow;
 
-        public ActivityController()
+        public ActivityController(IUnitOfWork? unitOfWork)
         {
-            _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            if (unitOfWork == null)
+            {
+                _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            }
+            else
+            {
+                _uow = unitOfWork;
+            }
         }
 
         [HttpPost("Create")]
@@ -63,7 +70,7 @@ namespace MyTutoring.Server.Controllers
             }
 
             IEnumerable<Activity> dbActivities = new List<Activity>();
-            string userName = "";           
+            string userName = "";
 
             dbActivities = await _uow.ActivityRepo.GetAllAsync();
             Activity? dbActivityTutor = dbActivities.FirstOrDefault(a => a.TutorId == Guid.Parse(userInfo.Id));

@@ -37,14 +37,14 @@ namespace DataAccessLayer.Mock
 
         public IRepository<UserRole> UserRoleRepo => new Repository<UserRole>(_context.UserRoles);
 
-        public Task<int> CompleteAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Dispose()
         {
-            throw new NotImplementedException();
+        }
+
+        public async Task<int> CompleteAsync()
+        {
+            await Task.Delay(0);
+            return 0;
         }
     }
 }

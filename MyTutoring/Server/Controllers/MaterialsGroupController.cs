@@ -13,9 +13,16 @@ namespace MyTutoring.Server.Controllers
     {
         private readonly IUnitOfWork _uow;
 
-        public MaterialsGroupController()
+        public MaterialsGroupController(IUnitOfWork unitOfWork = null)
         {
-            _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            if (unitOfWork == null)
+            {
+                _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            }
+            else
+            {
+                _uow = unitOfWork;
+            }
         }
 
         [HttpPost("Create")]
@@ -24,7 +31,7 @@ namespace MyTutoring.Server.Controllers
         {
             if (materialGroupViewModel == null)
             {
-                return BadRequest(new RequestResult { Successful = false, Message = "Nie podano nazwy dla grupy materiału"});
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie podano nazwy dla grupy materiału" });
             }
             var materialGroup = await _uow.MaterialsGroupRepo.SingleOrDefaultAsync(x => x.Name == materialGroupViewModel.Name);
             if (materialGroup != null)
@@ -46,7 +53,7 @@ namespace MyTutoring.Server.Controllers
             IEnumerable<MaterialGroupSingleViewModel> materialGroupViewModels = new List<MaterialGroupSingleViewModel>();
             if (model == null)
             {
-                return new MaterialsGroupViewModel { MaterialGroupSingleViewModels = null};
+                return new MaterialsGroupViewModel { MaterialGroupSingleViewModels = null };
             }
 
             if (model.Role == "admin" || model.Role == "tutor")
