@@ -9,5 +9,6 @@ namespace MyTutoring.Client.Services.Material
         Task<RequestResult> DeleteMaterial(MaterialViewModel model);
         Task<RequestResult> EditMaterial(MaterialViewModel model);
         Task<MaterialsViewModel> GetMaterialViewModelList(int materialGroupId);
+        Task<MaterialViewModel> GetMaterial(SingleItemByIdRequest model);
     }
 }

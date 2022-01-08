@@ -55,14 +55,14 @@ namespace MyTutoring.Client.Pages
             StateHasChanged();
         }
 
-        private void NavigateToEditMaterial(int? id)
+        private void NavigateToEditMaterial(int? materialId)
         {
-            NavigationManager.NavigateTo("changeVisibility/" + id);
+            NavigationManager.NavigateTo("materials/editMaterial/" + materialId);
         }
 
-        private void Delete(int? id)
+        private void Delete(int? materialId)
         {
-            //deleteMaterial
+            MaterialService.DeleteMaterial(new MaterialViewModel() { Id = materialId });
         }
     }
 }

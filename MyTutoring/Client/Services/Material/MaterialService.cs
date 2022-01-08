@@ -43,12 +43,28 @@ namespace MyTutoring.Client.Services.Material
 
         public async Task<RequestResult> EditMaterial(MaterialViewModel model)
         {
-            throw new NotImplementedException();
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Material/Edit", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<RequestResult> DeleteMaterial(MaterialViewModel model)
         {
-            throw new NotImplementedException();
+            await _refreshService.Refresh();
+            var response = await _httpClient.PostAsync("Material/Delete", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<MaterialViewModel> GetMaterial(SingleItemByIdRequest model)
+        {
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Material/Get", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<MaterialViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }
