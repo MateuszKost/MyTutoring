@@ -123,28 +123,28 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("Get")]
         [Authorize(Roles = "admin, tutor, student")]
-        public async Task<ActionResult<HomeworkSingleViewModel>> Get([FromBody] SingleHomeworkRequest homeworkRequest)
+        public async Task<ActionResult<HomeworkSingleViewModel>> Get([FromBody] SingleItemByIdRequest homeworkRequest)
         {
             if (homeworkRequest == null)
             {
                 return null;
             }
 
-            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == homeworkRequest.HomeworkId);
+            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == homeworkRequest.Id);
 
             if (homework == null)
             {
                 return null;
             }
 
-            Material material = await _uow.MaterialRepo.SingleOrDefaultAsync(h => h.HomeworkId == homeworkRequest.HomeworkId);
+            Material material = await _uow.MaterialRepo.SingleOrDefaultAsync(h => h.HomeworkId == homeworkRequest.Id);
 
             if (material == null)
             {
                 return null;
             }
 
-            TaskSolution taskSolution = await _uow.TaskSolutionRepo.SingleOrDefaultAsync(h => h.HomeworkId == homeworkRequest.HomeworkId);
+            TaskSolution taskSolution = await _uow.TaskSolutionRepo.SingleOrDefaultAsync(h => h.HomeworkId == homeworkRequest.Id);
 
             if (taskSolution != null)
             {
@@ -190,14 +190,14 @@ namespace MyTutoring.Server.Controllers
 
         [HttpPost("GetToChangeGrade")]
         [Authorize(Roles = "admin, tutor")]
-        public async Task<ActionResult<ChangeGradeViewModel>> GetToChangeGrade([FromBody] SingleHomeworkRequest homeworkRequest)
+        public async Task<ActionResult<ChangeGradeViewModel>> GetToChangeGrade([FromBody] SingleItemByIdRequest homeworkRequest)
         {
             if (homeworkRequest == null)
             {
                 return null;
             }
 
-            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == homeworkRequest.HomeworkId);
+            Homework homework = await _uow.HomeworkRepo.SingleOrDefaultAsync(h => h.Id == homeworkRequest.Id);
 
             if (homework == null)
             {

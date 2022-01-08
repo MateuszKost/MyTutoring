@@ -13,9 +13,16 @@ namespace MyTutoring.Server.Controllers
     {
         private readonly IUnitOfWork _uow;
 
-        public MaterialVisibilityController()
+        public MaterialVisibilityController(IUnitOfWork unitOfWork = null)
         {
-            _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            if (unitOfWork == null)
+            {
+                _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            }
+            else
+            {
+                _uow = unitOfWork;
+            }
         }        
 
         [HttpPost("Getvisibilitylist")]

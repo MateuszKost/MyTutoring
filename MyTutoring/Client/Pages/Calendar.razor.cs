@@ -31,12 +31,12 @@ namespace MyTutoring.Client.Pages
 
         private void NavigateToEditActivity(int activityId)
         {
-            NavigationManager.NavigateTo("calendar/editActivity" + activityId);
+            NavigationManager.NavigateTo("calendar/editActivity/" + activityId);
         }
 
         private void Delete(int activityId)
         {
-            ActivitiesService.DeleteActivity(activityId);
+            ActivitiesService.DeleteActivity(new SingleItemByIdRequest { Id = activityId });
         }
     }
 }

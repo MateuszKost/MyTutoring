@@ -13,9 +13,16 @@ namespace MyTutoring.Server.Controllers
     {
         private readonly IUnitOfWork _uow;
 
-        public ActivityController()
+        public ActivityController(IUnitOfWork unitOfWork = null)
         {
-            _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            if (unitOfWork == null)
+            {
+                _uow = DataAccessLayerFactory.CreateUnitOfWork();
+            }
+            else
+            {
+                _uow = unitOfWork;
+            }
         }
 
         [HttpPost("Create")]
@@ -26,12 +33,6 @@ namespace MyTutoring.Server.Controllers
             {
                 return BadRequest(new RequestResult { Successful = false, Message = "Nie podano wszystkich danych" });
             }
-
-            //Activity activity = await _uow.ActivityRepo.SingleOrDefaultAsync(m => m.Name == model.Name);
-            //if (activity != null)
-            //{
-            //    return BadRequest(new RequestResult { Successful = false, Message = "Aktywność o takiej nazwie już istnieje" });
-            //}
 
             Dictionary<int, string> daysOfWeek = ActivityTimeList.CreateDayOfWeek();
             int day = daysOfWeek.FirstOrDefault(d => d.Value == model.DayOfWeek).Key;
@@ -51,6 +52,71 @@ namespace MyTutoring.Server.Controllers
             return Ok(new RequestResult { Successful = true, Message = "Aktywnosc o nazwie " + model.Name });
         }
 
+        [HttpPost("Edit")]
+        [Authorize(Roles = "tutor")]
+        public async Task<ActionResult<RequestResult>> Edit([FromBody] ActivitySingleViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie podano wszystkich danych" });
+            }
+
+            Activity activity = await _uow.ActivityRepo.SingleOrDefaultAsync(a => a.Id == model.Id);
+            if (activity == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            Dictionary<int, string> daysOfWeek = ActivityTimeList.CreateDayOfWeek();
+            int day = daysOfWeek.FirstOrDefault(d => d.Value == model.DayOfWeek).Key;
+
+            activity.Name = model.Name;
+            activity.StartTime = model.StartTime;
+            activity.EndTime = model.EndTime;
+            activity.StudentId = Guid.Parse(model.StudentId);
+            activity.TutorId = Guid.Parse(model.TutorId);
+            activity.DayOfWeek = day;
+
+            _uow.ActivityRepo.Update(activity);
+            await _uow.CompleteAsync();
+
+            return Ok(new RequestResult { Successful = true, Message = "Aktywnosc o nazwie " + model.Name + " została zmieniona." });
+        }
+
+        [HttpPost("Get")]
+        [Authorize(Roles = "tutor")]
+        public async Task<ActionResult<ActivitySingleViewModel>> Get([FromBody] SingleItemByIdRequest model)
+        {
+            if (model == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie podano wszystkich danych" });
+            }
+
+            Activity activity = await _uow.ActivityRepo.SingleOrDefaultAsync(a => a.Id == model.Id);
+            if (activity == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            Dictionary<int, string> daysOfWeek = ActivityTimeList.CreateDayOfWeek();
+            string day = daysOfWeek.FirstOrDefault(d => d.Key == activity.DayOfWeek).Value;
+            Student student = await _uow.StudentRepo.SingleOrDefaultAsync(t => t.UserId == activity.StudentId);
+
+            ActivitySingleViewModel activitySingleViewModel = new ActivitySingleViewModel()
+            {
+                Id = activity.Id,
+                Name = activity.Name,
+                StartTime = activity.StartTime,
+                EndTime = activity.EndTime,
+                DayOfWeek = day,
+                StudentId = activity.StudentId.ToString(),
+                TutorId = activity.TutorId.ToString(),
+                UserName = student.FirstName + " " + student.LastName
+            };
+
+            return activitySingleViewModel;
+        }
+
         [HttpPost("Getall")]
         [Authorize(Roles = "tutor, student")]
         public async Task<ActionResult<ActivityViewModel>> GetAll([FromBody] UserInfo userInfo)
@@ -63,7 +129,7 @@ namespace MyTutoring.Server.Controllers
             }
 
             IEnumerable<Activity> dbActivities = new List<Activity>();
-            string userName = "";           
+            string userName = "";
 
             dbActivities = await _uow.ActivityRepo.GetAllAsync();
             Activity? dbActivityTutor = dbActivities.FirstOrDefault(a => a.TutorId == Guid.Parse(userInfo.Id));
@@ -91,6 +157,22 @@ namespace MyTutoring.Server.Controllers
             }
 
             return new ActivityViewModel { Activities = activities };
+        }
+
+        [Authorize(Roles = "tutor")]
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete([FromBody] SingleItemByIdRequest model)
+        {
+            Activity activity = await _uow.ActivityRepo.SingleOrDefaultAsync(a => a.Id == model.Id);
+            if (activity == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            _uow.ActivityRepo.Remove(activity);
+            await _uow.CompleteAsync();
+
+            return Ok();
         }
     }
 }
