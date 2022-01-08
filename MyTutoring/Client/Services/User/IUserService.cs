@@ -9,5 +9,7 @@ namespace MyTutoring.Client.Services.EditProfile
         Task<IEnumerable<StudentSingleViewModel>> GetTutors();
         Task<RequestResult> EditProfile(EditProfileViewModel model);
         Task<EditProfileViewModel?> GetEditProfileModel();
+        Task<RequestResult> DeleteStudent(UserInfo model);
+        Task<RequestResult> DeleteTutor(UserInfo model);
     }
 }

@@ -138,5 +138,37 @@ namespace MyTutoring.Server.Controllers
 
             return BadRequest(new RequestResult { Successful = false, Message = "Błąd systemowy." });
         }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("deleteStudent")]
+        public async Task<IActionResult> DeleteStudent([FromBody] UserInfo model)
+        {
+            Student student = await _uow.StudentRepo.SingleOrDefaultAsync(a => a.UserId == Guid.Parse(model.Id));
+            if (student == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            _uow.StudentRepo.Remove(student);
+            await _uow.CompleteAsync();
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("deleteTutor")]
+        public async Task<IActionResult> DeleteTutor([FromBody] UserInfo model)
+        {
+            Tutor tutor = await _uow.TutorRepo.SingleOrDefaultAsync(a => a.UserId == Guid.Parse(model.Id));
+            if (tutor == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            _uow.TutorRepo.Remove(tutor);
+            await _uow.CompleteAsync();
+
+            return Ok();
+        }
     }
 }
