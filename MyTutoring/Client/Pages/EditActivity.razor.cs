@@ -4,9 +4,12 @@ using Models.ViewModels;
 
 namespace MyTutoring.Client.Pages
 {
-    public partial class CreateActivity
+    public partial class EditActivity
     {
-        public readonly ActivitySingleViewModel model = new ActivitySingleViewModel();
+        [Parameter]
+        public int ActivityId { get; set; }
+
+        public ActivitySingleViewModel model = new ActivitySingleViewModel();
         private IEnumerable<StudentSingleViewModel> Students;
         private Dictionary<int, string> days = ActivityTimeList.CreateDayOfWeek();
         private IEnumerable<float> startTimeList = ActivityTimeList.CreateActivityTimeList();
@@ -29,16 +32,15 @@ namespace MyTutoring.Client.Pages
             var state = await AuthState.GetAuthenticationStateAsync();
             var user = state.User;
             var userId = user.FindFirst("id");
+            model = await ActivitiesService.GetActivity(new SingleItemByIdRequest() { Id = ActivityId });
 
             SelectedTutorId = userId.Value;
+            SelectedStudentId = model.StudentId;
+            SelectedStartTime = model.StartTime;
+            SelectedEndTime = model.EndTime;
+            SelectedDay = days.SingleOrDefault(d => d.Value == model.DayOfWeek).Key;
             Students = await UserService.GetStudents();
-        }
-
-        private void OnSelectStudent(ChangeEventArgs e)
-        {
-            SelectedStudentId = e.Value.ToString();
-            Console.WriteLine(SelectedStudentId);
-        }
+        }        
 
         private void OnSelectDay(ChangeEventArgs e)
         {
@@ -60,7 +62,7 @@ namespace MyTutoring.Client.Pages
             Console.WriteLine(SelectedStudentId);
         }
 
-        private async void Create()
+        private async void Edit()
         {
             ShowErrors = false;
 
@@ -76,14 +78,14 @@ namespace MyTutoring.Client.Pages
             model.EndTime = SelectedEndTime;
             model.DayOfWeek = days[SelectedDay];
 
-            var result = await ActivitiesService.CreateActivity(model);
+            var result = await ActivitiesService.EditActivity(model);
 
             if (result.Successful)
             {
                 ShowErrors = false;
                 Success = true;
                 StateHasChanged();
-                NavigationManager.NavigateTo("/");
+                //NavigationManager.NavigateTo("/");
             }
             else
             {

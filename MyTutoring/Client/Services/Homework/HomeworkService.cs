@@ -25,7 +25,7 @@ namespace MyTutoring.Client.Services.Homework
         {
             await _refreshService.Refresh();
 
-            SingleHomeworkRequest homeworkRequest = new SingleHomeworkRequest { HomeworkId = homeworkId };
+            SingleItemByIdRequest homeworkRequest = new SingleItemByIdRequest { Id = homeworkId };
 
             var response = await _httpClient.PostAsync("Homework/Get", new StringContent(JsonSerializer.Serialize(homeworkRequest), Encoding.UTF8, "application/json"));
             HomeworkSingleViewModel homework = JsonSerializer.Deserialize<HomeworkSingleViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -56,7 +56,7 @@ namespace MyTutoring.Client.Services.Homework
         {
             await _refreshService.Refresh();
 
-            SingleHomeworkRequest homeworkRequest = new SingleHomeworkRequest { HomeworkId = homeworkId };
+            SingleItemByIdRequest homeworkRequest = new SingleItemByIdRequest { Id = homeworkId };
 
             var response = await _httpClient.PostAsync("Homework/GetToChangeGrade", new StringContent(JsonSerializer.Serialize(homeworkRequest), Encoding.UTF8, "application/json"));
             ChangeGradeViewModel changeGrade = JsonSerializer.Deserialize<ChangeGradeViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

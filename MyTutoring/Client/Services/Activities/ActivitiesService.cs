@@ -40,14 +40,30 @@ namespace MyTutoring.Client.Services.Activities
             return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<RequestResult> EditActivity(ActivitySingleViewModel activity)
+        public async Task<ActivitySingleViewModel> GetActivity(SingleItemByIdRequest model)
         {
-            throw new NotImplementedException();
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Activity/Get", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<ActivitySingleViewModel>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
-        public async Task<RequestResult> DeleteActivity(int Id)
+        public async Task<RequestResult> EditActivity(ActivitySingleViewModel activity)
         {
-            throw new NotImplementedException();
+            await _refreshService.Refresh();
+
+            var response = await _httpClient.PostAsync("Activity/Edit", new StringContent(JsonSerializer.Serialize(activity), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<RequestResult> DeleteActivity(SingleItemByIdRequest model)
+        {
+            await _refreshService.Refresh();
+            var response = await _httpClient.PostAsync("Activity/Delete", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }
