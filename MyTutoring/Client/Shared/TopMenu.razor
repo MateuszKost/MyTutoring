@@ -12,7 +12,7 @@
         <div class="topNavbar">
             <nav>
                 <div class="nav-item px-1" style="float: left;">
-                    <NavLink class="nav-link" href="fetchdata" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
                         <span class="oi oi-home" aria-hidden="true" style="font-size: 35px;"></span>
                     </NavLink>
                 </div>
@@ -29,7 +29,7 @@
             </nav>
         </div>
 
-        <div class="@NavMenuCssClass" style="height: calc(100vh - 60px); left: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
+        <div class="@NavMenuCssClass" style="min-height: calc(100vh - 60px); left: 0; background-color: RGB(77, 144, 210); position: absolute; z-index: 9">
             <ul class="nav flex-column  my-auto mx-auto">
                 @if (roleString == "student" || roleString == "tutor")
                 {
