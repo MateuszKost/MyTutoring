@@ -50,6 +50,48 @@ namespace MyTutoring.Server.Controllers
             return Ok(new RequestResult { Successful = true, Message = "Materiał o nazwie " + materialModel.FileName });
         }
 
+        [HttpPost("Edit")]
+        [Authorize(Roles = "admin, tutor")]
+        public async Task<ActionResult<RequestResult>> Edit([FromBody] MaterialViewModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie podano wszystkich danych" });
+            }
+
+            Material material = await _uow.MaterialRepo.SingleOrDefaultAsync(a => a.Id == model.Id);
+            if (material == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            material.Name = model.Name;
+            material.Description = model.Name;
+            material.FileName = material.FileName;
+            material.MaterialTypeId = model.MaterialTypeId;
+            material.MaterialGroupId = model.MaterialGroupId;
+
+            _uow.MaterialRepo.Update(material);
+            await _uow.CompleteAsync();
+
+            return Ok(new RequestResult { Successful = true, Message = "Aktywnosc o nazwie " + model.Name + " została zmieniona." });
+        }
+
+        [HttpPost("Get")]
+        [Authorize(Roles = "admin, tutor")]
+        public async Task<ActionResult<MaterialViewModel>> Get([FromBody] SingleItemByIdRequest model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            Material material = await _uow.MaterialRepo.SingleOrDefaultAsync(m => m.Id == model.Id);
+
+            Uri url = await _storageContext.GetAsync(new FileContainer(), material.FileName);
+            return new MaterialViewModel { Id = material.Id, Name = material.Name, Description = material.Description, MaterialGroupId = (int)material.MaterialGroupId, MaterialTypeId = (int)material.MaterialTypeId, Url = url };
+        }
+
         [HttpPost("Getall")]
         [Authorize(Roles = "admin, tutor, student")]
         public async Task<ActionResult<MaterialsViewModel>> GetAll([FromBody] MaterialGroupSingleViewModel materialGroupSingleViewModel)
@@ -72,6 +114,22 @@ namespace MyTutoring.Server.Controllers
             }
 
             return new MaterialsViewModel { MaterialViewModels = materialViewModels, MaterialGroupName = materialsGroup.Name };
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost("delete")]
+        public async Task<IActionResult> Delete([FromBody] SingleItemByIdRequest model)
+        {
+            Material material = await _uow.MaterialRepo.SingleOrDefaultAsync(a => a.Id == model.Id);
+            if (material == null)
+            {
+                return BadRequest(new RequestResult { Successful = false, Message = "Nie ma takiej aktywności, błąd po stronie serwera." });
+            }
+
+            _uow.MaterialRepo.Remove(material);
+            await _uow.CompleteAsync();
+
+            return Ok();
         }
     }
 }

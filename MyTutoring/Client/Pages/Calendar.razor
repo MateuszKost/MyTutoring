@@ -3,14 +3,14 @@
 
 @if (_loading)
 {
-    <div class="card col-lg-6 col-sm-8 col-xs-8" style="margin-right: auto; margin-left: auto">
-        <div class="card-body">            
+    <div class="card col-lg-10 col-xl-8" style="margin-right: auto; margin-left: auto">
+        <div class="card-body">
             <EditForm Model="finder" OnValidSubmit="OnSubmit">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <div class="form-group">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <label for="userName">Nazwa zajęć</label>
+                        <label class="activityName">Nazwa zajęć</label>
                     </div>
                     <div>
                         <InputText Id="userName" class="col-8" @bind-Value="finder.Name" />
@@ -20,11 +20,11 @@
             </EditForm>
             <div class="form-group">
                 <div class="col-12">
-                    <label class="col-2" style="float: left">Nazwa</label>
-                    <label class="col-2" style="float: left">Dzień</label>
-                    <label class="col-2" style="float: left">Start</label>
-                    <label class="col-2" style="float: left">Koniec</label>
-                    <label class="col-4" style="float: left">Z kim</label>
+                    <label class="textt col-2">Nazwa</label>
+                    <label class="textt col-2">Dzień</label>
+                    <label class="textt col-2">Start</label>
+                    <label class="textt col-2">Koniec</label>
+                    <label class="textt col-4">Z kim</label>
                 </div>
             </div>
             @if (Activities.Count() > 0)
@@ -32,19 +32,19 @@
                 @foreach (var activity in Activities)
                 {
                     <div class="col12">
-                        <label class="col-2" style="float: left">@activity.Name</label>
-                        <label class="col-2" style="float: left">@activity.DayOfWeek</label>
-                        <label class="col-2" style="float: left">@activity.StartTime</label>
-                        <label class="col-2" style="float: left">@activity.EndTime</label>
+                        <label class="textt col-2">@activity.Name</label>
+                        <label class="textt col-2">@activity.DayOfWeek</label>
+                        <label class="textt col-2">@activity.StartTime</label>
+                        <label class="textt col-2">@activity.EndTime</label>
                         @if (roleString == "tutor")
                         {
-                            <label class="col-2" style="float: left">@activity.UserName</label>
-                            <button type="submit" class="text-center col-1 btn btn-success" style="float: left" @onclick="@( () => NavigateToEditActivity(activity.Id) )"><i class="oi oi-pencil"></i></button>
-                            <button type="danger" class="text-center col-1 btn btn-danger" style="float: left" @onclick="@( () => Delete(activity.Id) )"><i class="oi oi-trash"></i></button>
+                            <label class="textt col-2">@activity.UserName</label>
+                            <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(activity.Id) )"><i class="oi oi-trash"></i></button>
+                            <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditActivity(activity.Id) )"><i class="oi oi-pencil"></i></button>
                         }
                         else
                         {
-                            <label class="col-4" style="float: left">@activity.UserName</label>                            
+                            <label class="textt col-4">@activity.UserName</label>
                         }
                     </div>
                 }
@@ -56,3 +56,18 @@ else
 {
     <h4>Loading...</h4>
 }
+
+<style type="text/css">   
+
+    .textt {
+        float: left;
+        font-size: medium;
+    }
+</style>
+
+<style type="text/css" media="screen and (max-width:450px)">   
+
+    .textt {
+        font-size: small
+    }
+</style>

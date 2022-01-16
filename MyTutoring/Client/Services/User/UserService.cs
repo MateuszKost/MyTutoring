@@ -53,5 +53,21 @@ namespace MyTutoring.Client.Services.EditProfile
 
             return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
+
+        public async Task<RequestResult> DeleteStudent(UserInfo model)
+        {
+            await _refreshService.Refresh();
+            var response = await _httpClient.PostAsync("User/DeleteStudent", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<RequestResult> DeleteTutor(UserInfo model)
+        {
+            await _refreshService.Refresh();
+            var response = await _httpClient.PostAsync("User/DeleteTutor", new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"));
+
+            return JsonSerializer.Deserialize<RequestResult>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
     }
 }

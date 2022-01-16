@@ -1,0 +1,111 @@
+﻿@page "/materials/editMaterial/{MaterialId:int}"
+@attribute [Authorize]
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+@if (Success)
+{
+    <div class="row justify-content-center mb-5">
+        <span class="text-success">Materiał został zedytowany poprawnie!</span>
+    </div>
+    ClearAll();
+}
+
+<div class="text-center">
+    <h1>Edytuj materiał</h1>
+</div>
+
+<div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+    <div class="card-body">
+
+        <div class="text-center">
+            <div class="h1 rotate-15"><i class="bi bi-card-image"></i></div>
+            <h1 class="h4 text-gray-900 mb-4">
+                Wybierz grupe i typ
+            </h1>
+        </div>
+
+        <div class="col-12">
+            <form @onsubmit="UploadFiles" method="post">
+                <div class="row justify-content-center">
+
+                    <EditForm Model="model" OnValidSubmit="UploadFiles">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+                            <label for="name">Wyświetlana nazwa</label>
+                            <InputText Id="name" class="form-control" @bind-Value="model.Name" placeholder=@model.Name />
+                            <ValidationMessage For="@(() => model.Name)" />
+                        </div>
+                        <div class="form-group col-sm-12 col-md-6 text-center" style="margin-right: auto; margin-left: auto">
+                            <label for="description">Opis</label>
+                            <InputText Id="description" class="form-control" @bind-Value="model.Description" placeholder=@model.Description />
+                            <ValidationMessage For="@(() => model.Description)" />
+                        </div>
+                    </EditForm>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-6 form-group text-center" style="float: right">
+
+                            <label for="selectType">Typ</label>
+                            <select @onchange="OnSelectType" class="form-control" id="selectType">
+
+                                <option value="0"> </option>
+
+                                @if (materialTypeSingleViewModels != null)
+                                {
+                                    foreach (var materialType in materialTypeSingleViewModels)
+                                    {
+                                        @if (materialType.MaterialTypeId == model.MaterialTypeId)
+                                        {
+                                            <option value="@materialType.MaterialTypeId" selected>@materialType.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@materialType.MaterialTypeId">@materialType.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-6 form-group text-center">
+
+                            <label for="selectGroup">Grupa</label>
+                            <select @onchange="OnSelectGroup" class="form-control" id="selectGroup">
+
+                                <option value="0"> </option>
+
+                                @if (materialGroupSingleViewModels != null)
+                                {
+                                    foreach (var materialGroup in materialGroupSingleViewModels)
+                                    {
+                                        @if (materialGroup.MaterialGroupId == model.MaterialGroupId)
+                                        {
+                                            <option value="@materialGroup.MaterialGroupId" selected>@materialGroup.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@materialGroup.MaterialGroupId">@materialGroup.Name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top: 5px">
+                        <button type="submit" class="btn btn-success">Edytuj</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+

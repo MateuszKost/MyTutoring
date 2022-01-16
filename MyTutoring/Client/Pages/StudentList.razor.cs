@@ -34,7 +34,7 @@ namespace MyTutoring.Client.Pages
 
         private void Delete(string userId)
         {
-            //deleteStudent
+            UserService.DeleteStudent(new Models.Models.UserInfo() { Id = userId, Role = "delete" });
         }
     }
 
