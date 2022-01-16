@@ -77,7 +77,7 @@ namespace MyTutoring.Client.Pages
                 Success = true;
                 StateHasChanged();
 
-                NavigationManager.NavigateTo("/");
+                //NavigationManager.NavigateTo("/");
                 //Task.Delay(2000);
 
                 //NavigationManager.NavigateTo("/");
@@ -93,7 +93,8 @@ namespace MyTutoring.Client.Pages
         private void ClearAll()
         {
             model = new MaterialViewModel();
-            //NavigationManager.NavigateTo("/");
+            Task.Delay(2000);
+            NavigationManager.NavigateTo("/");
         }
     }
 }
