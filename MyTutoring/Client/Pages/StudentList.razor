@@ -20,7 +20,14 @@
                 </div>
             </EditForm>
             <div class="form-group">
-                <label class="col-5" style="float: left;">Imie i nazwisko</label>
+                @if (roleString == "admin")
+                {
+                    <label class="col-4" style="float: left;">Dane</label>
+                }
+                else
+                {
+                    <label class="col-5" style="float: left;">Dane</label>                    
+                }
                 <label class="col-5" style="padding-left: 5px; float: left;">adres email</label>
             </div>
             @if (Students.Count() > 0)
@@ -28,15 +35,17 @@
                 @foreach (var student in Students)
                 {
                     <div class="form-group">
-                        <label class="col-5" style="float: left;">@student.StudentName</label>
-                        <label class="col-5" style="padding-left: 5px; float: left;">@student.Email</label>
                         @if (roleString == "admin")
                         {
-                            <button type="submit" class="text-center col-1 btn btn-success" style="float: left; margin-bottom: 5px;" @onclick="@( () => Navigate(student.UserId) )"><i class="oi oi-eye"></i></button>
-                            <button type="submit" class="text-center col-1 btn btn-danger" style="float: left; margin-bottom: 5px;" @onclick="@( () => Delete(student.UserId) )"><i class="oi oi-trash"></i></button>
+                            <label class="col-4" style="float: left;">@student.StudentName</label>
+                            <label class="col-5" style="padding-left: 5px; float: left;">@student.Email</label>
+                            <button type="submit" class="text-center col-1 btn btn-danger" style="float: right; margin-bottom: 5px;" @onclick="@( () => Delete(student.UserId) )"><i class="oi oi-trash"></i></button>
+                            <button type="submit" class="text-center col-1 btn btn-success" style="float: right; margin-bottom: 5px;" @onclick="@( () => Navigate(student.UserId) )"><i class="oi oi-eye"></i></button>
                         }
                         else
                         {
+                            <label class="col-5" style="float: left;">@student.StudentName</label>
+                            <label class="col-5" style="padding-left: 5px; float: left;">@student.Email</label>
                             <button type="submit" class="text-center col-2 btn btn-success" style="float: left; margin-bottom: 5px;" @onclick="@( () => Navigate(student.UserId) )"><i class="oi oi-eye"></i></button>
                         }
                     </div>

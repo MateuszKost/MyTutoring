@@ -3,46 +3,43 @@
 
 @if (isLoading)
 {
-     <div class="text-center">
+    <div class="text-center">
         <h1>@materialsView.MaterialGroupName</h1>
     </div>
     if (materialViewModelsTypeNotes.Count > 0)
     {
-        <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+        <div class="card col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
             <div class="card-body">
                 <h5 class="card-title">Notatki</h5>
                 @foreach (var material in materialViewModelsTypeNotes)
                 {
-                    <div class="file">
-                        <div>
-                            @if (roleString == "student")
-                            {
-                                <a class="aalink col-12" style="float: left" href=@material.Url>
-                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="aalink col-10" style="float: left" href=@material.Url>
-                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
-                                </a>
-                            }
-                            @if (roleString == "admin")
-                            {
-                                <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
-                                <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(material.Id) )"><i class="oi oi-trash"></i></button>
-                            }
-                            else if (roleString == "tutor")
-                            {
-                                <button type="submit" class="text-center col-2 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
-                            }
-                        </div>
-                        <div>
-                            <a>
-                                <span class="description col-12">Opis: </span> @material.Description
+                    <div class="col-12">
+                        @if (roleString == "student")
+                        {
+                            <a class="aalink col-12" style="float: left" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
                             </a>
-                        </div>
+                        }
+                        else
+                        {
+                            <a class="aalink col-9" style="float: left" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
+                            </a>
+                        }
+                        @if (roleString == "admin")
+                        {
+                            <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(material.Id) )"><i class="oi oi-trash"></i></button>
+                            <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
+                        }
+                        else if (roleString == "tutor")
+                        {
+                            <button type="submit" class="text-center col-2 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
+                        }
                     </div>
+                    <br />
+                    <a>
+                        Opis:  @material.Description
+                    </a>
                 }
             </div>
         </div>
@@ -50,41 +47,38 @@
 
     if (materialViewModelsTypeHomework.Count > 0)
     {
-        <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+        <div class="card col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
             <div class="card-body">
                 <h5 class="card-title">Zadania</h5>
                 @foreach (var material in materialViewModelsTypeHomework)
                 {
-                    <div class="file">
-                        <div>
-                            @if (roleString == "student")
-                            {
-                                <a class="aalink col-12" style="float: left" href=@material.Url>
-                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="aalink col-10" style="float: left" href=@material.Url>
-                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
-                                </a>
-                            }
-                            @if (roleString == "admin")
-                            {
-                                <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
-                                <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(material.Id) )"><i class="oi oi-trash"></i></button>
-                            }
-                            else if (roleString == "tutor")
-                            {
-                                <button type="submit" class="text-center col-2 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
-                            }
-                        </div>
-                        <div>
-                            <a>
-                                <span class="description col-12">Opis: </span> @material.Description
+                    <div class="col-12">
+                        @if (roleString == "student")
+                        {
+                            <a class="aalink col-12" style="float: left" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
                             </a>
-                        </div>
+                        }
+                        else
+                        {
+                            <a class="aalink col-9" style="float: left" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
+                            </a>
+                        }
+                        @if (roleString == "admin")
+                        {
+                            <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(material.Id) )"><i class="oi oi-trash"></i></button>
+                            <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
+                        }
+                        else if (roleString == "tutor")
+                        {
+                            <button type="submit" class="text-center col-2 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
+                        }
                     </div>
+                    <br />
+                    <a>
+                        Opis:  @material.Description
+                    </a>
                 }
             </div>
         </div>
@@ -92,41 +86,38 @@
 
     if (materialViewModelsTypeTest.Count > 0)
     {
-        <div class="card col-xl-4 col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
+        <div class="card col-lg-6 col-sm-8" style="margin-right: auto; margin-left: auto">
             <div class="card-body">
                 <h5 class="card-title">Sprawdziany</h5>
                 @foreach (var material in materialViewModelsTypeTest)
                 {
-                    <div class="file">
-                        <div>
-                            @if (roleString == "student")
-                            {
-                                <a class="aalink col-12" style="float: left" href=@material.Url>
-                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="aalink col-10" style="float: left" href=@material.Url>
-                                    <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
-                                </a>
-                            }
-                            @if (roleString == "admin")
-                            {
-                                <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
-                                <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(material.Id) )"><i class="oi oi-trash"></i></button>
-                            }
-                            else if (roleString == "tutor")
-                            {
-                                <button type="submit" class="text-center col-2 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
-                            }
-                        </div>
-                        <div>
-                            <a>
-                                <span class="description col-12">Opis: </span> @material.Description
+                    <div class="col-12">
+                        @if (roleString == "student")
+                        {
+                            <a class="aalink col-12" style="float: left" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
                             </a>
-                        </div>
+                        }
+                        else
+                        {
+                            <a class="aalink col-9" style="float: left" href=@material.Url>
+                                <span class="sideoi oi oi-file" aria-hidden="true"></span> @material.Name
+                            </a>
+                        }
+                        @if (roleString == "admin")
+                        {
+                            <button type="danger" class="text-center col-1 btn btn-danger" style="float: right" @onclick="@( () => Delete(material.Id) )"><i class="oi oi-trash"></i></button>
+                            <button type="submit" class="text-center col-1 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
+                        }
+                        else if (roleString == "tutor")
+                        {
+                            <button type="submit" class="text-center col-2 btn btn-success" style="float: right" @onclick="@( () => NavigateToEditMaterial(material.Id) )"><i class="oi oi-pencil"></i></button>
+                        }
                     </div>
+                    <br />
+                    <a>
+                        Opis:  @material.Description
+                    </a>
                 }
             </div>
         </div>
